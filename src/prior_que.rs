@@ -15,20 +15,15 @@ fn main() {
     for i in 0..A.len() {
         p -= a[i];
         while p < 0 {
-            match heap.pop() {
-                Some(a) => {
-                    println!("use {:?}", a);
-                    p += a;
-                    cnt += 1;
-                },
-                None => {
-                    println!("-1");
-                    return;
-                }
+            if let Some(a) = heap.pop() {
+                p += a;
+                cnt += 1;
+            } else {
+                println!("-1");
+                return;
             }
         }
         heap.push(B[i]);
     }
-
     println!("{:?}", cnt);
 }

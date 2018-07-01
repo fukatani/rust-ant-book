@@ -28,12 +28,10 @@ impl Solver {
 
     fn solve(self, start_idx: usize) {
         let mut cost = vec![INF; self.num_apexes];
-
-        cost[0] = 0;
+        cost[start_idx] = 0;
         loop {
             let mut updated = false;
-            for i in 0..self.num_edges {
-                let e = &self.edges[i];
+            for e in &self.edges {
                 if cost[e.from] != INF && cost[e.to] > cost[e.from] + e.cost {
                     cost[e.to] = cost[e.from] + e.cost;
                     updated = true;
@@ -56,7 +54,7 @@ fn main() {
     edges.push(Edge{from: 2, to: 4, cost: 1});
     edges.push(Edge{from: 2, to: 5, cost: 4});
     edges.push(Edge{from: 4, to: 5, cost: 4});
-    let mut solver = Solver::new(edges);
+    let solver = Solver::new(edges);
     // println!("{:?}", solver);
     solver.solve(0);
 }

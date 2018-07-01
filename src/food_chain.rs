@@ -1,3 +1,4 @@
+#[derive(Clone)]
 struct UnionFindTree {
     n: usize,
     par: Vec<usize>,
@@ -53,21 +54,34 @@ struct Info {
 }
 
 fn process_info(info: Info, max_n: usize, mut uft: UnionFindTree) -> i32 {
+    let mut ans = 0;
     if info.x > max_n || info.y > max_n {
         return 1;
     }
     if info.info_type == 1 {
-        uft.
+        if uft.same(info.x, info.y + max_n) || uft.same(info.x, info.y + 2 * max_n) {
+            ans += 1;
+        } else {
+            uft.unite(info.x, info.y);
+            uft.unite(info.x + max_n, info.y + max_n);
+            uft.unite(info.x + 2 * max_n, info.y + 2 * max_n);
+        }
     } else {
-
+        if uft.same(info.x, info.y) || uft.same(info.x, info.y + 2 * max_n) {
+            ans += 1;
+        } else {
+            uft.unite(info.x, info.y + max_n);
+            uft.unite(info.x + max_n, info.y + 2 * max_n);
+            uft.unite(info.x + 2 * max_n, info.y);
+        }
     }
-    return 0;
+    return ans;
 }
 
 
 fn main() {
-    let N: usize = 100;
-    let mut uft = UnionFindTree::new(3 * N);
+    let max_n: usize = 100;
+    let uft = UnionFindTree::new(3 * max_n);
     let info1 = Info{info_type: 1, x: 101, y: 1};
     let info2 = Info{info_type: 2, x: 1, y: 2};
     let info3 = Info{info_type: 2, x: 2, y: 3};
@@ -86,6 +100,7 @@ fn main() {
 
     let mut cnt = 0;
     for info in infos {
-        cnt += process_info(info, uft);
+        cnt += process_info(info, max_n, uft.clone());
     }
+    println!("{:?}", cnt);
 }
