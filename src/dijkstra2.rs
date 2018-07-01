@@ -25,8 +25,7 @@ fn make_pair(x: i32, y:usize) -> (MinInt, usize) {
     (MinInt{value: x}, y)
 }
 
-#[derive(Debug)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct Edge {
     to: usize,
     cost: i32

@@ -11,19 +11,17 @@ struct Edge {
 #[derive(Debug)]
 struct Solver {
     edges: Vec<Edge>,
-    num_edges: usize,
     num_apexes: usize
 }
 
 impl Solver {
     fn new(edges: Vec<Edge>) -> Solver {
         let mut apex_set: std::collections::HashSet<usize> = std::collections::HashSet::new();
-        let edge2 = edges.clone();
-        for edge in edges {
+        for edge in &edges {
             apex_set.insert(edge.to);
             apex_set.insert(edge.from);
         }
-        Solver{num_edges: edge2.len(), edges: edge2, num_apexes: apex_set.len()}
+        Solver{edges: edges, num_apexes: apex_set.len()}
     }
 
     fn solve(self, start_idx: usize) {
