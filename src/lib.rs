@@ -71,13 +71,13 @@ fn syakutori() {
     let mut s: usize = 0;
     let mut t: usize = 0;
     let mut res = 0;
-    loop {
+    'outer: loop {
         while t < a.len() && sum < S {
             t += 1;
+            if t == a.len() {
+                break 'outer;
+            }
             sum += a[t];
-        }
-        if sum < S {
-            break;
         }
         res = std::cmp::min(res, t - s);
         s += 1;
