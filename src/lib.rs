@@ -86,6 +86,23 @@ fn syakutori() {
     println!("{:?}", res);
 }
 
+fn argmin<T>(u: &[T]) -> (usize)
+    where T: Copy + PartialOrd
+{
+    assert!(u.len() != 0);
+
+    let mut min_index = 0;
+    let mut min = u[min_index];
+
+    for (i, v) in u.iter().enumerate().skip(1) {
+        if min > *v {
+            min_index = i;
+            min = *v;
+        }
+    }
+    min_index
+}
+
 
 fn main() {
     let nums: Vec<i32> = read_vec();
