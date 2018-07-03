@@ -1,7 +1,6 @@
 const INF:i32 = 1000;
 
-#[derive(Debug)]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct Edge {
     from: usize,
     to: usize,
