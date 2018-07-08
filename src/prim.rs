@@ -17,7 +17,7 @@ fn argmin<T>(u: &[T]) -> (usize)
 }
 
 
-fn prim(edges: Vec<Vec<i32>>) -> i32 {
+fn prim(edges: &Vec<Vec<i32>>) -> i32 {
     let mut min_cost = vec![INF; edges.len()];
     let mut used = vec![false; edges.len()];
     let mut res = 0;
@@ -57,5 +57,5 @@ fn main() {
     edges[2][5] = 4;
     edges[4][5] = 4;
     println!("{:?}", edges);
-    println!("{:?}", prim(edges));
+    println!("{:?}", prim(&edges));
 }

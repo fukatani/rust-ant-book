@@ -31,7 +31,7 @@ struct Edge {
     cost: i32
 }
 
-fn solve(edges: Vec<Vec<Edge>>, start_idx: usize, num_apexes: usize, end_idx: usize) {
+fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, num_apexes: usize, end_idx: usize) {
     let mut d = vec![INF; num_apexes];
     d[start_idx] = 0;
     let mut que = BinaryHeap::new();
@@ -71,5 +71,5 @@ fn main() {
     edges[2].push(Edge{to: 4, cost: 1});
     edges[2].push(Edge{to: 5, cost: 4});
     edges[4].push(Edge{to: 5, cost: 4});
-    solve(edges, 0, 6, 4);
+    solve(&edges, 0, 6, 4);
 }
