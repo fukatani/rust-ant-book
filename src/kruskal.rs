@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 
-#[derive(Debug, Clone, PartialOrd)]
+#[derive(Debug, Clone)]
 struct Edge {
     from: usize,
     to: usize,
@@ -18,6 +18,12 @@ impl Eq for Edge {}
 impl Ord for Edge {
     fn cmp(&self, other:&Self) -> Ordering {
         self.cost.cmp(&other.cost)
+    }
+}
+
+impl PartialOrd for Edge {
+    fn partial_cmp(&self, other: &Edge) -> Option<Ordering> {
+        Some(self.cost.cmp(&other.cost))
     }
 }
 
