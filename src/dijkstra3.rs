@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-const INF:i32 = 1000;
+const INF:i32 = std::i32::MAX;
 
 #[derive(PartialEq, Debug)]
 struct MinInt {

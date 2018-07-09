@@ -1,4 +1,4 @@
-const INF:i32 = 1000;
+const INF:i32 = std::i32::MAX;
 
 #[derive(Debug, Clone)]
 struct Edge {
