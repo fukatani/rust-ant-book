@@ -32,10 +32,10 @@ struct Edge {
 }
 
 fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, end_idx: usize,
-         num_apexes: usize) -> Vec<i64> {
+         num_apexes: usize) -> i64 {
     let mut dist: Vec<i64> = vec![INF; num_apexes];
     let mut dist2: Vec<i64> = vec![INF; num_apexes];
-    d[start_idx] = 0;
+    dist[start_idx] = 0;
     let mut que = BinaryHeap::new();
     que.push(make_pair(0, start_idx));
 
@@ -44,9 +44,9 @@ fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, end_idx: usize,
             continue
         }
         for e in &edges[v] {
-            let d2 = u.value + e.cost;
+            let mut d2 = u.value + e.cost;
             if dist[e.to] > d2 {
-                (dist[e.to], d2) = (d2, dist[e.to]);
+                std::mem::swap(&mut d2, &mut dist[e.to]);
                 que.push(make_pair(dist[e.to], e.to));
             }
             if dist2[e.to] > d2 && dist[e.to] < d2 {

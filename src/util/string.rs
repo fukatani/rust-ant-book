@@ -66,12 +66,8 @@ impl MyStr {
         self.value.push(ch)
     }
 
-    fn reverse(&mut self) -> MyStr {
-        let mut res: String = "".to_string();
-        for ch in self.value.iter().rev() {
-            res.push(ch.clone());
-        }
-        MyStr::from_string(res)
+    fn reverse(&mut self) {
+        self.value.reverse();
     }
 
     fn repeat(&self, n:usize) -> MyStr {
@@ -140,7 +136,9 @@ fn main() {
             }
             i = i >> 1;
         }
-        *left_map.entry((red.reverse(), blue.reverse())).or_insert(0 as i64) += 1;
+        red.reverse();
+        blue.reverse();
+        *left_map.entry((red, blue)).or_insert(0 as i64) += 1;
     }
 
     let right_word:Vec<&char> = s[s.len()/2..].iter().collect();
