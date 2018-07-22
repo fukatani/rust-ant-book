@@ -1,60 +1,52 @@
+#[derive(Debug, Clone)]
 struct UnionFindTree {
-    n: usize,
-    par: Vec<usize>,
-    rank: Vec<usize>,
+    parent_or_size: Vec<isize>,
 }
 
 impl UnionFindTree {
-    pub fn new(n: usize) -> UnionFindTree {
-        let mut par: Vec<usize> = Vec::new();
-        for i in 0..n {
-            par.push(i);
-        }
-        let rank = vec![0; n];
-        UnionFindTree{
-            n: n,
-            par: par,
-            rank: rank,
-        }
+    fn new(size: usize) -> UnionFindTree {
+        UnionFindTree { parent_or_size: vec![-1; size] }
     }
 
-    fn find(&self, x: usize) -> usize {
-        let mut x = x;
-        while self.par[x] != x {
-            x = self.par[x];
+    fn find(&self, index: usize) -> usize {
+        let mut index = index;
+        while self.parent_or_size[index] >= 0 {
+            index = self.parent_or_size[index] as usize;
         }
-        x
+        index
     }
 
     fn same(&self, x: usize, y: usize) -> bool {
         self.find(x) == self.find(y)
     }
 
-    fn unite(&mut self, x: usize, y: usize) {
-        if self.same(x, y) {
-            return;
+    fn unite(&mut self, index0: usize, index1: usize) -> bool {
+        let a = self.find(index0);
+        let b = self.find(index1);
+        if a == b {
+            false
+        } else {
+            if self.parent_or_size[a] < self.parent_or_size[b] {
+                self.parent_or_size[a] += self.parent_or_size[b];
+                self.parent_or_size[b] = a as isize;
+            } else {
+                self.parent_or_size[b] += self.parent_or_size[a];
+                self.parent_or_size[a] = b as isize;
+            }
+            true
         }
-        let mut x = x;
-        let mut y = y;
-        if self.rank[y] > self.rank[x] {
-            std::mem::swap(&mut x, &mut y);
-        }
-        self.par[x] = y;
-        if self.rank[x] == self.rank[y] {
-          self.rank[x] = self.rank[y] + 1;
-      }
     }
 }
 
 
 fn main() {
     let mut uft = UnionFindTree::new(4);
-    println!("{:?}", uft.par);
+    println!("{:?}", uft);
     println!("{:?}", uft.same(0, 1));
     uft.unite(0, 1);
     println!("{:?}", uft.same(0, 1));
     println!("{:?}", uft.same(0, 2));
     uft.unite(2, 1);
-    println!("{:?}", uft.par);
+    println!("{:?}", uft);
     println!("{:?}", uft.same(0, 2));
 }
