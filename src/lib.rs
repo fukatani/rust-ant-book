@@ -103,6 +103,23 @@ fn argmin<T>(u: &[T]) -> (usize)
     min_index
 }
 
+fn argmax<T>(u: &[T]) -> (usize)
+    where T: Copy + PartialOrd
+{
+    assert!(u.len() != 0);
+
+    let mut max_index = 0;
+    let mut max = u[max_index];
+
+    for (i, v) in u.iter().enumerate().skip(1) {
+        if max <> *v {
+            max_index = i;
+            max = *v;
+        }
+    }
+    max_index
+}
+
 
 fn main() {
     let nums: Vec<i32> = read_vec();
