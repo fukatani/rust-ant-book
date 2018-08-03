@@ -112,7 +112,7 @@ fn argmax<T>(u: &[T]) -> (usize)
     let mut max = u[max_index];
 
     for (i, v) in u.iter().enumerate().skip(1) {
-        if max <> *v {
+        if max < *v {
             max_index = i;
             max = *v;
         }
