@@ -1,32 +1,31 @@
-struct Solver {
-    dp: Vec<Vec<i32>>,
-    a: Vec<i32>,
-    k: usize,
-    m: Vec<usize>
-}
-
-impl Solver {
-    fn new(n: usize, k: usize, a: Vec<i32>, m: Vec<usize>) -> Solver {
-        let dp = vec![vec![-1; n]; k + 1];
-        Solver{dp: dp, k: k, a: a, m: m}
+fn solve(a: &Vec<usize>, m: &Vec<usize>, k: usize) -> bool {
+    let mut dp: Vec<Vec<i32>> = vec![vec![-1; k + 1]; a.len() + 1];
+    for i in 0..a.len() {
+        dp[i][0] = 0;
     }
-
-    fn solve(&mut self) {
-        for i in 0..self.a.len() {
-            for j in 0..self.k {
-                if self.dp[i][j] >= 0 {
-                    self.dp[i][j] = self.m[i];
-                }
+    for i in 0..a.len() {
+        for j in 0..k + 1 {
+            if dp[i][j] >= 0 {
+                dp[i + 1][j] = m[i] as i32;
+            } else if j < a[i] || dp[i + 1][j - a[i]] <= 0 {
+                dp[i + 1][j] = -1;
+            } else {
+                dp[i + 1][j] = dp[i + 1][j - a[i]] - 1;
             }
         }
     }
+    println!("{:?}", dp);
+    return dp[a.len()][k] >= 0;
 }
 
 fn main() {
-    let n = 3;
-    let k = 17;
-    let a = vec![3, 5, 8];
-    let m = vec![3, 2, 2];
+    let a: Vec<usize> = vec![3, 5, 8];
+    let m: Vec<usize> = vec![3, 2, 2];
+    let k: usize = 17;
 
-    let solver = Solver::new(n, k, a, m);
+    if solve(&a, &m, k) {
+        println!("Yes");
+    } else {
+        println!("No");
+    }
 }
