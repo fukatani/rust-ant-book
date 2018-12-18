@@ -1,5 +1,3 @@
-const MAX_N: usize = 1 << 17;
-
 struct SegTree {
     n: usize,
     dat: Vec<u32>
