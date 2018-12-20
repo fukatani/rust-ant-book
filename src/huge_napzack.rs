@@ -89,27 +89,13 @@ fn main() {
     }
     s.sort();
 
-    let mut remove_indexes = Vec::new();
-    for i in 1..s.len() {
-        if s[i].0 == s[i - 1].0 {
-            remove_indexes.push(i - 1);
-        }
-    }
-    for i in remove_indexes {
-        s.remove(i);
-    }
-
-    let mut remove_indexes = Vec::new();
     let mut highest_value = s[0].1;
     for i in 1..s.len() {
-        if s[i].1 <= highest_value {
-            remove_indexes.push(i);
+        if s[i].1 < highest_value {
+            s[i].1 = highest_value;
         } else {
             highest_value = v[i];
         }
-    }
-    for i in remove_indexes {
-        s.remove(i);
     }
 
     let sw = s.iter().map(|x| x.0).collect::<Vec<_>>();
