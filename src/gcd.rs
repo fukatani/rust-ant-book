@@ -28,6 +28,7 @@ struct ModFactorial {
     fact: Vec<i64>
 }
 
+// returns n! under mod m
 impl ModFactorial {
     fn new(n: i64, m: i64) -> ModFactorial {
         let mut fact = vec![1; n as usize + 1];
@@ -38,6 +39,7 @@ impl ModFactorial {
     }
 }
 
+// returns bin[i] = nCi under mod m
 struct ModBinominal {
     bin: Vec<i64>
 }
