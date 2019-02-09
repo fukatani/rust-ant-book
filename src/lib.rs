@@ -86,6 +86,36 @@ fn syakutori() {
     println!("{:?}", res);
 }
 
+fn kadane(points: &Vec<i64>) -> (i64, usize, usize) {
+    let mut res = std::i64::MIN;
+    let mut sub = 0;
+
+    // range of subarray
+    let mut start = 0;
+    let mut end = 0;
+
+    for (i, &n) in points.iter().enumerate() {
+        let mut s = start;
+
+        // At the i-th time, `sub` denotes the sum of the maximum subarray
+        // that ends at element i.
+        if sub + n <= n {
+            sub = n;
+            s = i;
+        } else {
+            sub = sub + n;
+        }
+
+        if res < sub {
+            res = sub;
+            start = s;
+            end = i + 1;
+        }
+    }
+
+    (res, start, end)
+}
+
 fn argmin<T>(u: &[T]) -> (usize)
     where T: Copy + PartialOrd
 {
