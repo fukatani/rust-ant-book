@@ -1,31 +1,47 @@
-pub trait LexicalPermutation {
-    fn next_permutation(&mut self) -> bool;
+struct Permutation {
+    n: usize,
+    idx: usize,
 }
-
-impl<T> LexicalPermutation for [T] where T: Ord {
-    fn next_permutation(&mut self) -> bool {
-        if self.len() < 2 { return false; }
-        let mut i = self.len() - 1;
-        while i > 0 && self[i-1] >= self[i] {
-            i -= 1;
+impl Permutation {
+    fn new(n: usize) -> Permutation {
+        Permutation { n: n, idx: 0 }
+    }
+}
+impl Iterator for Permutation {
+    type Item = Vec<usize>;
+    fn next(&mut self) -> Option<Vec<usize>> {
+        let mut r = vec![0; self.n];
+        let mut idx = self.idx;
+        for k in 1..self.n {
+            r[k] = idx % (k + 1);
+            idx /= k + 1;
         }
-
-        if i == 0 {
-            return false;
+        if idx > 0 {
+            return None;
         }
-        let mut j = self.len() - 1;
-        while j >= i && self[j] <= self[i-1]  {
-            j -= 1;
+        r.reverse();
+        let mut b = vec![true; self.n];
+        b[r[0]] = false;
+        for k in 1..self.n {
+            let mut count = 0;
+            for j in 0..self.n {
+                if b[j] {
+                    if count == r[k] {
+                        r[k] = j;
+                        b[j] = false;
+                        break;
+                    }
+                    count += 1;
+                }
+            }
         }
-        self.swap(j, i-1);
-        self[i..].reverse();
-        true
+        self.idx += 1;
+        return Some(r);
     }
 }
 
 fn main() {
-    let mut data = vec![0, 1, 2 ,3];
-    while data.next_permutation() {
-        println!("{:?}", data);
+    for ord in Permutation::new(3) {
+        println!("{:?}", &ord);
     }
 }
