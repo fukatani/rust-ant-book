@@ -23,7 +23,7 @@ fn main() {
     for S in (0..(1 << n) - 1).rev() {
         for v in 0..n {
             for u in 0..n {
-                if S >> u & 1 == 0 {
+                if (S >> u) & 1 == 0 {
                     dp[S][v] = std::cmp::min(dp[S][v], dp[S | 1 << u][u] + d[v][u]);
                 }
             }
