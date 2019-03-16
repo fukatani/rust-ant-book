@@ -116,6 +116,21 @@ fn kadane(points: &Vec<i64>) -> (i64, usize, usize) {
     (res, start, end)
 }
 
+fn pow_m(n: i64, mut p: i64, m: i64) -> i64 {
+    let mut r = n;
+    let mut ret = 1;
+    while p > 0 {
+        if p % 2 == 0 {
+            r = r * r % m;
+            p /= 2;
+        } else {
+            ret = ret * r % m;
+            p -= 1;
+        }
+    }
+    ret
+}
+
 fn argmin<T>(u: &[T]) -> (usize)
     where T: Copy + PartialOrd
 {
