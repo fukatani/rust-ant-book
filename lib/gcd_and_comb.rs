@@ -38,16 +38,15 @@ struct ModBinominal {
 }
 
 impl ModBinominal {
-    fn new(n: i64, m: i64, mod_factorial: &ModFactorial) -> ModBinominal {
-        assert!(mod_factorial.fact.len() >= n as usize);
+    fn new(n: i64, m: i64, fact: &Vec<i64>, inv_fact: &Vec<i64>) -> ModBinominal {
         let mut bin = vec![1; n as usize + 1];
         if n == 0 {
             return ModBinominal { bin: bin };
         }
         for i in 1..n + 1 {
-            let a2 = mod_factorial.fact[i as usize] % m;
-            let a3 = mod_factorial.fact[(n - i) as usize] % m;
-            bin[i as usize] = mod_factorial.fact[n as usize] * mod_inverse(a2 * a3 % m, m) % m;
+            let a2 = inv_fact[i as usize] % m;
+            let a3 = inv_fact[(n - i) as usize] % m;
+            bin[i as usize] = fact[n as usize] * ((a2 * a3) % m) % m;
         }
         ModBinominal { bin: bin }
     }
@@ -67,17 +66,24 @@ fn main() {
     assert_eq!(fact7.fact[3], 6);
     assert_eq!(fact7.fact[7], 5040);
 
-    let binom7 = ModBinominal::new(7, big_int, &fact7);
+    let fact7 = fact7.fact;
+    let inv_fact7 = (0..fact7.len())
+        .map(|x| mod_inverse(fact7[x as usize], big_int))
+        .collect::<Vec<_>>();
+    let binom7 = ModBinominal::new(7, big_int, &fact7, &inv_fact7);
     assert_eq!(binom7.bin[0], 1);
     assert_eq!(binom7.bin[1], 7);
     assert_eq!(binom7.bin[2], 21);
     assert_eq!(binom7.bin[3], 35);
     assert_eq!(binom7.bin[7], 1);
 
-    let fact14 = ModFactorial::new(14, big_int);
+    let fact14 = ModFactorial::new(14, big_int).fact;
+    let inv_fact14 = (0..fact14.len())
+        .map(|x| mod_inverse(fact14[x as usize], big_int))
+        .collect::<Vec<_>>();
     let mut bins = Vec::with_capacity(15);
     for i in 0..15 {
-        bins.push(ModBinominal::new(i, big_int, &fact14));
+        bins.push(ModBinominal::new(i, big_int, &fact14, &inv_fact14));
     }
     assert_eq!(h_comb(3, 4, &bins), 15);
 }
