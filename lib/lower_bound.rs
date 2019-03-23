@@ -10,7 +10,7 @@ fn binary_search<F>(lb: usize, ub: usize, criterion: F) -> usize
             ub = mid;
         }
     }
-    ub
+    lb
 }
 
 fn main() {
