@@ -14,12 +14,13 @@ impl UnionFindTree {
         }
     }
 
-    fn find(&self, index: usize) -> usize {
-        let mut index = index;
-        while self.parent[index] >= 0 {
-            index = self.parent[index] as usize;
+    fn find(&mut self, index: usize) -> usize {
+        if self.parent[index] == -1 {
+            index
         }
-        index
+        let ret = self.find(self.parent[index])
+        self.parent[index] = ret
+        ret
     }
 
     fn same(&self, x: usize, y: usize) -> bool {
