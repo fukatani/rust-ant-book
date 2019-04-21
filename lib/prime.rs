@@ -18,6 +18,7 @@ fn get_primes(n: usize) -> Vec<usize> {
 }
 
 fn factorize(mut num: usize, primes: &Vec<usize>) -> std::collections::HashMap<usize, usize>  {
+    // max_primes >= (num)^(1/2)
     let mut dict = std::collections::HashMap::new();
     for &p in primes.iter() {
         while num % p == 0 {
@@ -28,10 +29,14 @@ fn factorize(mut num: usize, primes: &Vec<usize>) -> std::collections::HashMap<u
             break;
         }
     }
+    if num != 1 {
+        dict.insert(num, 1);
+    }
     dict
 }
 
 fn main() {
     println!("{:?}", get_primes(20));
     println!("{:?}", factorize(10, &get_primes(20)));
+    println!("{:?}", factorize(29, &get_primes(30)));
 }
