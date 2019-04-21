@@ -52,9 +52,22 @@ impl ModBinominal {
     }
 }
 
-fn h_comb(n: i64, r: i64, bins: &Vec<ModBinominal>) -> i64 {
+fn create_mod_bins(n: i64, big_int: i64) -> Vec<Vec<i64>> {
+    // bins[n][i] = nCi
+    let fact = ModFactorial::new(n, big_int).fact;
+    let inv_fact = (0..fact.len())
+        .map(|x| mod_inverse(fact[x as usize], big_int))
+        .collect::<Vec<_>>();
+    let mut bins = Vec::with_capacity(n as usize + 1);
+    for i in 0..n + 1 {
+        bins.push(ModBinominal::new(i, big_int, &fact, &inv_fact).bin);
+    }
+    bins
+}
+
+fn h_comb(n: i64, r: i64, bins: &Vec<Vec<i64>>) -> i64 {
     // nHr = n + r - 1Cr
-    bins[(n + r - 1) as usize].bin[r as usize]
+    bins[(n + r - 1) as usize][r as usize]
 }
 
 fn main() {
@@ -77,13 +90,10 @@ fn main() {
     assert_eq!(binom7.bin[3], 35);
     assert_eq!(binom7.bin[7], 1);
 
-    let fact14 = ModFactorial::new(14, big_int).fact;
-    let inv_fact14 = (0..fact14.len())
-        .map(|x| mod_inverse(fact14[x as usize], big_int))
-        .collect::<Vec<_>>();
-    let mut bins = Vec::with_capacity(15);
-    for i in 0..15 {
-        bins.push(ModBinominal::new(i, big_int, &fact14, &inv_fact14));
-    }
+    let bins = create_mod_bins(8, big_int);
+    assert_eq!(bins[7][3], 35);
+    assert_eq!(bins[8][2], 28);
+
+    // test h_comb
     assert_eq!(h_comb(3, 4, &bins), 15);
 }
