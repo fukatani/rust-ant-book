@@ -44,7 +44,7 @@ impl<T: Ord> BinarySearch<T> for [T] {
 }
 
 fn main() {
-    let vec = vec![1, 2, 2, 4, 6, 7, 12, 54, 60];
+    let vec = vec![1, 2, 2, 4, 6, 7, 12, 54, 60];  // input should be sorted.
     println!("{}", vec.lower_bound(&0));
     println!("{}", vec.lower_bound(&1));
     println!("{}", vec.lower_bound(&2));
