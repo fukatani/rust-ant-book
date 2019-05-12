@@ -1,3 +1,4 @@
 src/*
 !src/*.*
+!src/dp_training/*.*
 
