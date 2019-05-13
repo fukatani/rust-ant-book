@@ -24,12 +24,12 @@ impl Solver {
     }
 
     fn solve(&self, start_idx: usize) {
-        let mut cost = vec![INF; self.num_apexes];
+        let mut cost = vec![0; self.num_apexes];
         cost[start_idx] = 0;
         loop {
             let mut updated = false;
             for e in &self.edges {
-                if cost[e.from] != INF && cost[e.to] > cost[e.from] + e.cost {
+                if cost[e.to] > cost[e.from] + e.cost {
                     cost[e.to] = cost[e.from] + e.cost;
                     updated = true;
                 }
