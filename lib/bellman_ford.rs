@@ -1,72 +1,50 @@
-const INF:i32 = std::i32::MAX;
+const INF: i64 = std::i64::MAX;
 
-#[derive(Debug, Clone)]
-struct Edge {
-    from: usize,
-    to: usize,
-    cost: i32
-}
-
-#[derive(Debug)]
-struct Solver {
-    edges: Vec<Edge>,
-    num_apexes: usize
-}
-
-impl Solver {
-    fn new(edges: Vec<Edge>) -> Solver {
-        let mut apex_set: std::collections::HashSet<usize> = std::collections::HashSet::new();
-        for edge in &edges {
-            apex_set.insert(edge.to);
-            apex_set.insert(edge.from);
-        }
-        Solver{edges: edges, num_apexes: apex_set.len()}
-    }
-
-    fn solve(&self, start_idx: usize) {
-        let mut cost = vec![0; self.num_apexes];
-        cost[start_idx] = 0;
-        loop {
-            let mut updated = false;
-            for e in &self.edges {
-                if cost[e.to] > cost[e.from] + e.cost {
-                    cost[e.to] = cost[e.from] + e.cost;
-                    updated = true;
+fn shortest_path(graph: &Vec<Vec<(usize, i64)>>, start: usize) -> (Vec<i64>, Vec<bool>) {
+    let n = graph.len();
+    let mut dist = vec![INF; n];
+    dist[start] = 0;
+    for _ in 0..n {
+        for v in 0..n {
+            for &(to, cost) in &graph[v] {
+                if dist[v] == INF || dist[to] <= dist[v] + cost {
+                    continue;
                 }
-            }
-            if !updated {
-                break;
+                dist[to] = dist[v] + cost;
             }
         }
-        println!("{:?}", cost);
     }
 
-    fn find_negative_loop(&self) -> bool {
-        let mut d = vec![INF; self.num_apexes];
-        for i in 0..self.num_apexes {
-            for e in &self.edges {
-                if d[e.from] != INF && d[e.to] > d[e.from] + e.cost {
-                    d[e.to] = d[e.from] + e.cost;
-                    if i == self.num_apexes - 1 {
-                        return true;
-                    }
+    let mut negative = vec![false; n];
+    for _ in 0..n {
+        for v in 0..n {
+            for &(to, cost) in &graph[v] {
+                if dist[v] == INF {
+                    continue;
+                }
+                if dist[to] > dist[v] + cost {
+                    dist[to] = dist[v] + cost;
+                    negative[to] = true;
+                }
+                if negative[v] {
+                    negative[to] = true;
                 }
             }
         }
-        false
     }
+
+    return (dist, negative);
 }
 
 fn main() {
-    let mut edges:Vec<Edge> = Vec::new();
-    edges.push(Edge{from: 0, to: 1, cost: 5});
-    edges.push(Edge{from: 0, to: 2, cost: 4});
-    edges.push(Edge{from: 1, to: 2, cost: -2});
-    edges.push(Edge{from: 2, to: 3, cost: 2});
-    edges.push(Edge{from: 2, to: 4, cost: 1});
-    edges.push(Edge{from: 2, to: 5, cost: 4});
-    edges.push(Edge{from: 4, to: 5, cost: 4});
-    let solver = Solver::new(edges);
-    // println!("{:?}", solver);
-    solver.solve(0);
+    let mut edges = vec![Vec::new(); 6];
+    edges[0].push((1, 5));
+    edges[0].push((2, 4));
+    edges[1].push((2, -2));
+    edges[2].push((3, 2));
+    edges[2].push((4, 1));
+    edges[2].push((5, 4));
+    edges[4].push((5, 4));
+    let result = shortest_path(&edges, 0);
+    println!("{:?}", result);
 }
