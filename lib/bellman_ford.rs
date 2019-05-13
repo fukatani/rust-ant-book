@@ -23,7 +23,7 @@ impl Solver {
         Solver{edges: edges, num_apexes: apex_set.len()}
     }
 
-    fn solve(self, start_idx: usize) {
+    fn solve(&self, start_idx: usize) {
         let mut cost = vec![INF; self.num_apexes];
         cost[start_idx] = 0;
         loop {
@@ -39,6 +39,21 @@ impl Solver {
             }
         }
         println!("{:?}", cost);
+    }
+
+    fn find_negative_loop(&self) -> bool {
+        let mut d = vec![INF; self.num_apexes];
+        for i in 0..self.num_apexes {
+            for e in &self.edges {
+                if d[e.from] != INF && d[e.to] > d[e.from] + e.cost {
+                    d[e.to] = d[e.from] + e.cost;
+                    if i == self.num_apexes - 1 {
+                        return true;
+                    }
+                }
+            }
+        }
+        false
     }
 }
 
