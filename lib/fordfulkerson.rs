@@ -21,12 +21,16 @@ impl Solver {
 
     fn add_edge(&mut self, from: usize, to: usize, cap: i64) {
         let rev = self.edges[to].len();
-        self.edges[from].push(Edge { to, cap, rev });
+        self.edges[from].push(Edge {
+            to: to,
+            cap: cap,
+            rev: rev,
+        });
         let rev = self.edges[from].len() - 1;
         self.edges[to].push(Edge {
             to: from,
             cap: 0,
-            rev,
+            rev: rev,
         });
     }
 
