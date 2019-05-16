@@ -46,19 +46,19 @@ fn main() {
         if cur_x == goal_x && cur_y == goal_y {
             break;
         }
-        if cur_x > 0 && d[cur_y][cur_x - 1] == std::u64::MAX {
+        if cur_x > 0 && maze[cur_y][cur_x - 1] != '#' && d[cur_y][cur_x - 1] == std::u64::MAX {
             d[cur_y][cur_x - 1] = d[cur_y][cur_x] + 1;
             que.push_back((cur_x - 1, cur_y));
         }
-        if cur_x < maze[0].len() - 1 && d[cur_y][cur_x + 1] == std::u64::MAX {
+        if cur_x < maze[0].len() - 1 && maze[cur_y][cur_x + 1] != '#' && d[cur_y][cur_x + 1] == std::u64::MAX {
             d[cur_y][cur_x + 1] = d[cur_y][cur_x] + 1;
             que.push_back((cur_x + 1, cur_y));
         }
-        if cur_y > 0 && d[cur_y - 1][cur_x] == std::u64::MAX {
+        if cur_y > 0 && maze[cur_y - 1][cur_x] != '#' && d[cur_y - 1][cur_x] == std::u64::MAX {
             d[cur_y - 1][cur_x] = d[cur_y][cur_x] + 1;
             que.push_back((cur_x, cur_y - 1));
         }
-        if cur_y < maze.len() - 1 && d[cur_y + 1][cur_x] == std::u64::MAX {
+        if cur_y < maze.len() - 1 && maze[cur_y + 1][cur_x] != '#' && d[cur_y + 1][cur_x] == std::u64::MAX {
             d[cur_y + 1][cur_x] = d[cur_y][cur_x] + 1;
             que.push_back((cur_x, cur_y + 1));
         }
