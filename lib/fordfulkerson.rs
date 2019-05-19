@@ -66,7 +66,9 @@ impl Solver {
     }
 }
 
-fn biparate_matching(n: usize, k: usize, can: &Vec<Vec<bool>>) -> i64 {
+fn biparate_matching(can: &Vec<Vec<bool>>) -> i64 {
+    let n = can.len();
+    let k = can[0].len();
     let s = n + k;
     let t = s + 1;
     let mut solver = Solver::new(n + k + 2);
@@ -108,15 +110,15 @@ fn main() {
     let k = 5usize;
     let mut can = vec![vec![false; k]; n];
     can[0][0] = true;
-    assert_eq!(biparate_matching(n, k, &can), 1);
+    assert_eq!(biparate_matching(&can), 1);
     can[0][1] = true;
-    assert_eq!(biparate_matching(n, k, &can), 1);
+    assert_eq!(biparate_matching(&can), 1);
     can[1][1] = true;
-    assert_eq!(biparate_matching(n, k, &can), 2);
+    assert_eq!(biparate_matching(&can), 2);
     can[2][1] = true;
-    assert_eq!(biparate_matching(n, k, &can), 2);
+    assert_eq!(biparate_matching(&can), 2);
     can[3][4] = true;
-    assert_eq!(biparate_matching(n, k, &can), 3);
+    assert_eq!(biparate_matching(&can), 3);
     can[3][3] = true;
-    assert_eq!(biparate_matching(n, k, &can), 3);
+    assert_eq!(biparate_matching(&can), 3);
 }
