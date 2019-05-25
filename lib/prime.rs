@@ -35,6 +35,37 @@ fn factorize(mut num: usize, primes: &Vec<usize>) -> std::collections::HashMap<u
     dict
 }
 
+fn pow(n: usize, mut p: usize) -> usize {
+    let mut r = n;
+    let mut ret = 1;
+    while p > 0 {
+        if p % 2 == 0 {
+            r = r * r;
+            p /= 2;
+        } else {
+            ret = ret * r;
+            p -= 1;
+        }
+    }
+    ret
+}
+
+fn collect_all_factors(dict: &std::collections::HashMap<usize, usize>) -> Vec<usize> {
+    let mut ret = vec![1];
+    for &key in dict.keys() {
+        let mut new = ret.clone();
+
+        for coef in 1..dict[&key] + 1 {
+            let coef_1 = pow(key, coef);
+            for &num in ret.iter() {
+                new.push(num * coef_1);
+            }
+        }
+        ret = new;
+    }
+    ret
+}
+
 fn main() {
     println!("{:?}", get_primes(20));
     println!("{:?}", factorize(10, &get_primes(20)));
