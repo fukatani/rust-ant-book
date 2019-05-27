@@ -6,7 +6,11 @@ struct LazySegmentTree {
 }
 
 impl LazySegmentTree {
-    fn new(n: usize) -> LazySegmentTree {
+    fn new(sz: usize) -> LazySegmentTree {
+        let mut n = 1;
+        while n < sz {
+            n *= 2;
+        }
         LazySegmentTree {
             n: n,
             node: vec![0i64; n * 2],

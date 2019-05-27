@@ -8,7 +8,11 @@ struct LazySegmentTree {
 }
 
 impl LazySegmentTree {
-    fn new(n: usize) -> LazySegmentTree {
+    fn new(sz: usize) -> LazySegmentTree {
+        let mut n = 1;
+        while n < sz {
+            n *= 2;
+        }
         LazySegmentTree {
             n: n,
             node: vec![std::i64::MAX; n * 2],
@@ -71,4 +75,5 @@ fn main() {
     assert_eq!(1, st.getmin(3, 5, 0, 0, n));
     st.update(3, 6, -2, 0, 0, n);
     assert_eq!(-2, st.getmin(3, 5, 0, 0, n));
+    assert_eq!(3, st.getmin(7, 8, 0, 0, n));
 }
