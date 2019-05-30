@@ -6,11 +6,15 @@ struct LazySegmentTree {
 }
 
 impl LazySegmentTree {
-    fn new(n: usize) -> LazySegmentTree {
+    fn new(sz: usize) -> LazySegmentTree {
+        let mut n = 1;
+        while n < sz {
+            n *= 2;
+        }
         LazySegmentTree {
             n: n,
-            node: vec![0i64; n],
-            lazy: vec![0i64; n],
+            node: vec![0i64; n * 2],
+            lazy: vec![0i64; n * 2],
         }
     }
 
@@ -34,7 +38,7 @@ impl LazySegmentTree {
         }
 
         if a <= l && r <= b {
-            self.lazy[k] += (r as i64 - 1) * x;
+            self.lazy[k] += (r - l) as i64 * x;
             self.eval(k, l, r);
         } else {
             self.add(a, b, x, 2 * k + 1, l, (l + r) / 2);
@@ -61,9 +65,10 @@ impl LazySegmentTree {
 fn main() {
     let n = 8usize;
     let mut st = LazySegmentTree::new(n);
-    st.add(3, 6, 2, 0, n, n);
-    st.add(4, 7, 1, 0, n, n);
-    st.add(0, 8, -3, 0, n, n);
-    println!("{:?}", st.getsum(0, 5, 0, 0, n));
-    println!("{:?}", st);
+    // st.add(3, 6, 2, 0, 0, n);
+    st.add(0, 8, -3, 0, 0, n);
+    assert_eq!(-6, st.getsum(0, 2, 0, 0, n));
+    st.add(4, 7, 1, 0, 0, n);
+    assert_eq!(-5, st.getsum(3, 5, 0, 0, n));
+    // println!("{:?}", st);
 }
