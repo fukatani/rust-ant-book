@@ -1,6 +1,6 @@
-const INF:i32 = 1000;
+const INF:i64 = 1000000;
 
-fn warshall_floyd(n: usize, mut edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+fn warshall_floyd(n: usize, mut edges: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
     for k in 0..n {
         for i in 0..n {
             for j in 0..n {
@@ -11,10 +11,39 @@ fn warshall_floyd(n: usize, mut edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     edges
 }
 
+fn warshall_floyd_recover(n: usize, mut edges: Vec<Vec<i64>>) {
+    let mut prev = vec![vec![0; n]; n];
+    for i in 0..n {
+        for j in 0..n {
+            prev[i][j] = i;
+        }
+    }
+    for k in 0..n {
+        for i in 0..n {
+            for j in 0..n {
+                if edges[i][k] + edges[k][j] < edges[i][j] {
+                    edges[i][j] = edges[i][k] + edges[k][j];
+                    prev[i][j] = prev[k][j];
+                }
+            }
+        }
+    }
+    let mut path = vec![vec![vec![]; n]; n];
+    for start in 0..n {
+        for goal in 0..n {
+            let mut cur = goal;
+            while cur != start {
+                path[start][goal].push(cur);
+                cur = prev[start][cur];
+            }
+        }
+    }
+    println!("{:?}", path);
+}
 
 fn main() {
     let v = 6;
-    let mut edges: Vec<Vec<i32>> = vec![vec![INF; v]; v];
+    let mut edges: Vec<Vec<i64>> = vec![vec![INF; v]; v];
     for i in 0..v {
         edges[i][i] = 0;
     }
