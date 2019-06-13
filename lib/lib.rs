@@ -186,3 +186,33 @@ fn main() {
     println!("{:?}", ans);
     imos();
 }
+
+fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> {
+    let mut adjacents = vec![];
+    if x > 0 {
+        if y > 0 {
+            adjacents.push((x - 1, y - 1));
+        }
+        adjacents.push((x - 1, y));
+        if y < h - 1 {
+            adjacents.push((x - 1, y + 1));
+        }
+    }
+    if y > 0 {
+        adjacents.push((x, y - 1));
+    }
+    adjacents.push((x, y));
+    if y < h - 1 {
+        adjacents.push((x, y + 1));
+    }
+    if x < w - 1 {
+        if y > 0 {
+            adjacents.push((x + 1, y - 1));
+        }
+        adjacents.push((x + 1, y));
+        if y < h - 1 {
+            adjacents.push((x + 1, y + 1));
+        }
+    }
+    adjacents
+}
