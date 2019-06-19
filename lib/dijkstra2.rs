@@ -1,10 +1,10 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-const INF:i32 = std::i32::MAX;
+const INF: i64 = 100000_00000_00000;
 
 #[derive(PartialEq, Debug)]
 struct MinInt {
-    value:i32,
+    value: i64,
 }
 
 impl Eq for MinInt {}
@@ -21,17 +21,17 @@ impl Ord for MinInt {
     }
 }
 
-fn make_pair(x: i32, y:usize) -> (MinInt, usize) {
-    (MinInt{value: x}, y)
+fn make_pair(x: i64, y: usize) -> (MinInt, usize) {
+    (MinInt { value: x }, y)
 }
 
 #[derive(Debug, Clone)]
 struct Edge {
     to: usize,
-    cost: i32
+    cost: i64,
 }
 
-fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, num_apexes: usize) {
+fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, num_apexes: usize) -> Vec<i64> {
     let mut d = vec![INF; num_apexes];
     d[start_idx] = 0;
     let mut que = BinaryHeap::new();
@@ -39,17 +39,18 @@ fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize, num_apexes: usize) {
 
     while let Some((u, v)) = que.pop() {
         if d[v] < u.value {
-            continue
+            continue;
         }
         for e in &edges[v] {
-            if d[e.to] > d[v] + e.cost {
+            if d[v] != INF && d[e.to] > d[v] + e.cost {
                 d[e.to] = d[v] + e.cost;
                 que.push(make_pair(d[e.to], e.to));
             }
         }
     }
-    println!("{:?}", d);
+    d
 }
+
 
 fn main() {
     let mut edges:Vec<Vec<Edge>> = vec![Vec::new(); 6];
