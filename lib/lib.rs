@@ -64,26 +64,26 @@ fn imos() {
 }
 
 fn syakutori() {
-    let a = vec![5, 1, 3, 5, 10, 7, 4, 9, 2, 8];
-    let S = 20;
-    let mut sum = 0;
+    let (n, k) = (4, 10);
+    let a = vec![6, 1, 2, 7];
+    let mut r = 0;
+    let mut cur = 0;
+    let mut ans = 0;
 
-    let mut s: usize = 0;
-    let mut t: usize = 0;
-    let mut res = 0;
-    'outer: loop {
-        while t < a.len() && sum < S {
-            t += 1;
-            if t == a.len() {
-                break 'outer;
-            }
-            sum += a[t];
+    let check = |cond| cond >= k; // define continue condition
+
+    for i in 0..n {
+        while r < n && !check(cur) {
+            cur += a[r]; // update end
+            r += 1;
         }
-        res = std::cmp::min(res, t - s);
-        s += 1;
-        sum -= a[s];
+        if !check(cur) {
+            break;
+        }
+        ans += n + 1 - r;
+        cur -= a[i]; // update start
     }
-    println!("{:?}", res);
+    println!("{}", ans);
 }
 
 fn kadane(points: &Vec<i64>) -> (i64, usize, usize) {
@@ -215,4 +215,15 @@ fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> 
         }
     }
     adjacents
+}
+
+#[derive(PartialEq, PartialOrd)]
+pub struct Total<T>(pub T);
+
+impl<T: PartialEq> Eq for Total<T> {}
+
+impl<T: PartialOrd> Ord for Total<T> {
+    fn cmp(&self, other: &Total<T>) -> std::cmp::Ordering {
+        self.0.partial_cmp(&other.0).unwrap()
+    }
 }
