@@ -1,42 +1,28 @@
-struct AdjacentMatrix {
-    mat: Vec<Vec<usize>>,
-}
-
-impl AdjacentMatrix {
-    pub fn new(n: usize) -> AdjacentMatrix {
-        AdjacentMatrix{
-            mat: vec![vec![0; n]; n],
-        }
-    }
-
-    pub fn connect(&mut self, x: usize, y: usize) {
-        self.mat[x][y] = 1;
-        self.mat[y][x] = 1;
-    }
-}
-
 struct Solver {
-    adj_mat: AdjacentMatrix,
-    colors: Vec<i32>  // 0 uncolored, 1 or -1
+    edges: Vec<Vec<usize>>,
+    colors: Vec<i32>, // 0 uncolored, 1 or -1
 }
 
 impl Solver {
+    fn new(n: usize) -> Solver {
+        Solver {
+            edges: vec![vec![]; n],
+            colors: vec![0; n],
+        }
+    }
     fn solve(&mut self, idx: usize, color: i32) -> bool {
-        if self.colors[idx] != 0 && self.colors[idx] != color {
-            return false;
+        if self.colors[idx] != 0 {
+            return self.colors[idx] == color;
         }
         self.colors[idx] = color;
-        println!("{0} to {1}", idx, color);
-        for i in 0..self.adj_mat.mat[idx].len() {
-            if self.adj_mat.mat[idx][i] == 0 {
-                continue;
-            }
-            if self.colors[i] == 0 {
-                let result = self.solve(i, color * -1);
+        for i in 0..self.edges[idx].len() {
+            let to = self.edges[idx][i];
+            if self.colors[to] == 0 {
+                let result = self.solve(to, color * -1);
                 if !result {
                     return false;
                 }
-            } else if self.colors[i] == color {
+            } else if self.colors[to] == color {
                 return false;
             }
         }
@@ -45,12 +31,16 @@ impl Solver {
 }
 
 fn main() {
-    let mut adj_mat = AdjacentMatrix::new(4);
-    adj_mat.connect(0, 1);
-    adj_mat.connect(0, 3);
-    adj_mat.connect(1, 2);
-    adj_mat.connect(3, 2);
+    let mut solver = Solver::new(4);
+    solver.edges[0].push(1);
+    solver.edges[1].push(0);
+    solver.edges[0].push(3);
+    solver.edges[3].push(0);
+    solver.edges[1].push(2);
+    solver.edges[2].push(1);
+    solver.edges[3].push(2);
+    solver.edges[2].push(3);
     let colors = vec![0; 4];
-    let mut solver = Solver{adj_mat: adj_mat, colors: colors};
+
     println!("{:?}", solver.solve(0, 1));
 }
