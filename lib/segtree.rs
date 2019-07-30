@@ -39,6 +39,7 @@ where
         }
     }
 
+    // [a, b)
     fn query(&self, a: usize, b: usize) -> T {
         self.query_inner(a, b, 0, 0, self.n)
     }
@@ -66,9 +67,9 @@ fn main() {
     seg.update(4, 8);
     seg.update(5, 1);
 
-    println!("{:?}", seg.query(0, 3));
-    println!("{:?}", seg.query(2, 5));
-    println!("{:?}", seg.query(3, 6));
+    assert_eq!(2, seg.query(0, 3));
+    assert_eq!(8, seg.query(2, 5));
+    assert_eq!(1, seg.query(3, 6));
 
     let mut seg = SegTree::new(6, 0u32, |x, y| x + y);
     seg.update(0, 4);
@@ -78,7 +79,7 @@ fn main() {
     seg.update(4, 8);
     seg.update(5, 1);
 
-    println!("{:?}", seg.query(0, 3));
-    println!("{:?}", seg.query(2, 5));
-    println!("{:?}", seg.query(3, 6));
+    assert_eq!(16, seg.query(0, 3));
+    assert_eq!(27, seg.query(2, 5));
+    assert_eq!(18, seg.query(3, 6));
 }
