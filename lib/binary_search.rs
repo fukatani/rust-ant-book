@@ -1,21 +1,23 @@
-fn binary_search<F>(lb: usize, ub: usize, criterion: F) -> usize
-    where F : Fn(usize) -> bool {
-    let mut lb = lb;
-    let mut ub = ub;
-    while ub - lb > 1 {
-        let mid = (ub + lb) / 2;
+fn binary_search<F>(lb: usize, ub: usize, criterion: F) -> (usize, usize)
+where
+    F: Fn(usize) -> bool,
+{
+    let mut ok = lb;
+    let mut ng = ub;
+    while ng - ok > 1 {
+        let mid = (ng + ok) / 2;
         if criterion(mid) {
-            lb = mid;
+            ok = mid;
         } else {
-            ub = mid;
+            ng = mid;
         }
     }
-    lb
+    (ok, ng)
 }
 
 fn main() {
     let v = vec![2, 3, 3, 5, 6];
-    let k = 4;
-    let ans = binary_search(0, v.len(), |a| v[a] >= k);
-    println!("{:?}", ans);
+    assert_eq!(2, binary_search(0, v.len(), |a| v[a] <= 4).0);
+    assert_eq!(2, binary_search(0, v.len(), |a| v[a] <= 3).0);
+    assert_eq!(0, binary_search(0, v.len(), |a| v[a] < 3).0);
 }
