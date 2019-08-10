@@ -116,6 +116,7 @@ fn kadane(points: &Vec<i64>) -> (i64, usize, usize) {
     (res, start, end)
 }
 
+// n ^ p mod m
 fn pow_m(n: i64, mut p: i64, m: i64) -> i64 {
     let mut r = n;
     let mut ret = 1;
