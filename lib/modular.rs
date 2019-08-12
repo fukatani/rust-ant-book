@@ -1,116 +1,149 @@
-mod mod_int {
-    use std::ops::*;
-    pub trait Mod: Copy { fn m() -> i64; }
-    #[derive(Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-    pub struct ModInt<M> { pub x: i64, phantom: ::std::marker::PhantomData<M> }
-    impl<M: Mod> ModInt<M> {
-        // x >= 0
-        pub fn new(x: i64) -> Self { ModInt::new_internal(x % M::m()) }
-        fn new_internal(x: i64) -> Self {
-            ModInt { x: x, phantom: ::std::marker::PhantomData }
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
+struct Modulo(i64);
+static mut MODULUS: i64 = 0;
+impl Modulo {
+    fn set_modulus(m: i64) {
+        unsafe {
+            MODULUS = m;
         }
-        pub fn pow(self, mut e: i64) -> Self {
-            debug_assert!(e >= 0);
-            let mut sum = ModInt::new_internal(1);
-            let mut cur = self;
-            while e > 0 {
-                if e % 2 != 0 { sum *= cur; }
-                cur *= cur;
-                e /= 2;
+    }
+    fn get_modulus() -> i64 {
+        unsafe { MODULUS }
+    }
+    fn new(x: i64) -> Modulo {
+        let m = Modulo::get_modulus();
+        if x < 0 {
+            Modulo(x % m + m)
+        } else if x < m {
+            Modulo(x)
+        } else {
+            Modulo(x % m)
+        }
+    }
+    fn pow(self, p: i64) -> Modulo {
+        if p == 0 {
+            Modulo(1)
+        } else {
+            let mut t = self.pow(p / 2);
+            t *= t;
+            if p & 1 == 1 {
+                t *= self;
             }
-            sum
-        }
-        #[allow(dead_code)]
-        pub fn inv(self) -> Self { self.pow(M::m() - 2) }
-    }
-    impl<M: Mod, T: Into<ModInt<M>>> Add<T> for ModInt<M> {
-        type Output = Self;
-        fn add(self, other: T) -> Self {
-            let other = other.into();
-            let mut sum = self.x + other.x;
-            if sum >= M::m() { sum -= M::m(); }
-            ModInt::new_internal(sum)
+            t
         }
     }
-    impl<M: Mod, T: Into<ModInt<M>>> Sub<T> for ModInt<M> {
-        type Output = Self;
-        fn sub(self, other: T) -> Self {
-            let other = other.into();
-            let mut sum = self.x - other.x;
-            if sum < 0 { sum += M::m(); }
-            ModInt::new_internal(sum)
-        }
-    }
-    impl<M: Mod, T: Into<ModInt<M>>> Mul<T> for ModInt<M> {
-        type Output = Self;
-        fn mul(self, other: T) -> Self { ModInt::new(self.x * other.into().x % M::m()) }
-    }
-    impl<M: Mod, T: Into<ModInt<M>>> AddAssign<T> for ModInt<M> {
-        fn add_assign(&mut self, other: T) { *self = *self + other; }
-    }
-    impl<M: Mod, T: Into<ModInt<M>>> SubAssign<T> for ModInt<M> {
-        fn sub_assign(&mut self, other: T) { *self = *self - other; }
-    }
-    impl<M: Mod, T: Into<ModInt<M>>> MulAssign<T> for ModInt<M> {
-        fn mul_assign(&mut self, other: T) { *self = *self * other; }
-    }
-    impl<M: Mod> Neg for ModInt<M> {
-        type Output = Self;
-        fn neg(self) -> Self { ModInt::new(0) - self }
-    }
-    impl<M> ::std::fmt::Display for ModInt<M> {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-            self.x.fmt(f)
-        }
-    }
-    impl<M: Mod> ::std::fmt::Debug for ModInt<M> {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-            let (mut a, mut b, _) = red(self.x, M::m());
-            if b < 0 {
-                a = -a;
-                b = -b;
-            }
-            write!(f, "{}/{}", a, b)
-        }
-    }
-    impl<M: Mod> From<i64> for ModInt<M> {
-        fn from(x: i64) -> Self { Self::new(x) }
-    }
-    // Finds the simplest fraction x/y congruent to r mod p.
-    // The return value (x, y, z) satisfies x = y * r + z * p.
-    fn red(r: i64, p: i64) -> (i64, i64, i64) {
-        if r.abs() <= 10000 {
-            return (r, 1, 0);
-        }
-        let mut nxt_r = p % r;
-        let mut q = p / r;
-        if 2 * nxt_r >= r {
-            nxt_r -= r;
-            q += 1;
-        }
-        if 2 * nxt_r <= -r {
-            nxt_r += r;
-            q -= 1;
-        }
-        let (x, z, y) = red(nxt_r, r);
-        (x, y - q * z, z)
-    }
-} // mod mod_int
-
-macro_rules! define_mod {
-    ($struct_name: ident, $modulo: expr) => {
-        #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-        struct $struct_name {}
-        impl mod_int::Mod for $struct_name { fn m() -> i64 { $modulo } }
+    fn inv(self) -> Modulo {
+        self.pow(Modulo::get_modulus() - 2)
     }
 }
-const MOD: i64 = 10000 + 7;
-define_mod!(P, MOD);
-type ModInt = mod_int::ModInt<P>;
+impl std::fmt::Display for Modulo {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+impl std::ops::AddAssign for Modulo {
+    fn add_assign(&mut self, other: Modulo) {
+        let m = Modulo::get_modulus();
+        self.0 += other.0;
+        if self.0 >= m {
+            self.0 -= m;
+        }
+    }
+}
+impl std::ops::MulAssign for Modulo {
+    fn mul_assign(&mut self, other: Modulo) {
+        let m = Modulo::get_modulus();
+        self.0 *= other.0;
+        self.0 %= m;
+    }
+}
+impl std::ops::SubAssign for Modulo {
+    fn sub_assign(&mut self, other: Modulo) {
+        let m = Modulo::get_modulus();
+        self.0 += m - other.0;
+        if self.0 >= m {
+            self.0 -= m;
+        }
+    }
+}
+macro_rules! impl_modulo_ops {
+    ($imp:ident, $method:ident, $assign_imp:ident, $assign_method:ident) => {
+        impl<'a> std::ops::$assign_imp<&'a Modulo> for Modulo {
+            fn $assign_method(&mut self, other: &'a Modulo) {
+                std::ops::$assign_imp::$assign_method(self, *other);
+            }
+        }
+        impl std::ops::$imp for Modulo {
+            type Output = Modulo;
+            fn $method(self, other: Modulo) -> Modulo {
+                let mut x = self;
+                std::ops::$assign_imp::$assign_method(&mut x, other);
+                x
+            }
+        }
+        impl<'a> std::ops::$imp<Modulo> for &'a Modulo {
+            type Output = Modulo;
+            fn $method(self, other: Modulo) -> Modulo {
+                std::ops::$imp::$method(*self, other)
+            }
+        }
+        impl<'a> std::ops::$imp<&'a Modulo> for Modulo {
+            type Output = Modulo;
+            fn $method(self, other: &'a Modulo) -> Modulo {
+                std::ops::$imp::$method(self, *other)
+            }
+        }
+        impl<'a, 'b> std::ops::$imp<&'b Modulo> for &'a Modulo {
+            type Output = Modulo;
+            fn $method(self, other: &'b Modulo) -> Modulo {
+                std::ops::$imp::$method(*self, *other)
+            }
+        }
+        impl std::ops::$assign_imp<i64> for Modulo {
+            fn $assign_method(&mut self, other: i64) {
+                std::ops::$assign_imp::$assign_method(self, Modulo::new(other));
+            }
+        }
+        impl<'a> std::ops::$assign_imp<&'a i64> for Modulo {
+            fn $assign_method(&mut self, other: &'a i64) {
+                std::ops::$assign_imp::$assign_method(self, *other);
+            }
+        }
+        impl std::ops::$imp<i64> for Modulo {
+            type Output = Modulo;
+            fn $method(self, other: i64) -> Modulo {
+                let mut x = self;
+                std::ops::$assign_imp::$assign_method(&mut x, other);
+                x
+            }
+        }
+        impl<'a> std::ops::$imp<&'a i64> for Modulo {
+            type Output = Modulo;
+            fn $method(self, other: &'a i64) -> Modulo {
+                std::ops::$imp::$method(self, *other)
+            }
+        }
+        impl<'a> std::ops::$imp<i64> for &'a Modulo {
+            type Output = Modulo;
+            fn $method(self, other: i64) -> Modulo {
+                std::ops::$imp::$method(*self, other)
+            }
+        }
+        impl<'a, 'b> std::ops::$imp<&'b i64> for &'a Modulo {
+            type Output = Modulo;
+            fn $method(self, other: &'b i64) -> Modulo {
+                std::ops::$imp::$method(*self, *other)
+            }
+        }
+    };
+}
+impl_modulo_ops!(Add, add, AddAssign, add_assign);
+impl_modulo_ops!(Mul, mul, MulAssign, mul_assign);
+impl_modulo_ops!(Sub, sub, SubAssign, sub_assign);
 
 fn main() {
-    assert_eq!(ModInt::new(2).pow(10), ModInt::new(1024));
-    assert_eq!(ModInt::new(2).pow(100), ModInt::new(1340));
-    assert_eq!(ModInt::new(10000) + 10, ModInt::new(3));
-    assert_eq!(ModInt::new(10000) * 2, ModInt::new(9993));
+    assert_eq!(Modulo::new(2).pow(10), Modulo::new(1024));
+    assert_eq!(Modulo::new(2).pow(100), Modulo::new(1340));
+    assert_eq!(Modulo::new(10000) + 10, Modulo::new(3));
+    assert_eq!(Modulo::new(10000) * 2, Modulo::new(9993));
 }

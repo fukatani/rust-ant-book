@@ -35,11 +35,6 @@ where
 
 fn main() {
     let v = vec![2, 3, 3, 5, 6];
-<<<<<<< HEAD
-    assert_eq!(2, binary_search(0, v.len(), |a| v[a] <= 4).0);
-    assert_eq!(2, binary_search(0, v.len(), |a| v[a] <= 3).0);
-    assert_eq!(0, binary_search(0, v.len(), |a| v[a] < 3).0);
-=======
     let k = 4;
     let ans = binary_search(0, v.len(), |a| v[a] >= k);
     assert_eq!(5, v[ans]);
@@ -55,5 +50,4 @@ fn main() {
     let v = vec![2, 3, 3, 5, 6, 4, 3, 2, 1];
     let ans = ternary_search(0, v.len(), |a| v[a]);
     assert_eq!(6, v[ans]);
->>>>>>> master
 }
