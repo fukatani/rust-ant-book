@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 
 pub trait BinarySearch<T> {
-    fn lower_bound(&self, &T) -> usize;
-    fn upper_bound(&self, &T) -> usize;
+    fn lower_bound(&self, x: &T) -> usize;
+    fn upper_bound(&self, x: &T) -> usize;
 }
 
 impl<T: Ord> BinarySearch<T> for [T] {
