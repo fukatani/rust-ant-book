@@ -188,7 +188,7 @@ fn main() {
     imos();
 }
 
-fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> {
+fn get_adjacents_and_diagonal(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> {
     let mut adjacents = vec![];
     if x > 0 {
         if y > 0 {
@@ -214,6 +214,24 @@ fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> 
         if y < h - 1 {
             adjacents.push((x + 1, y + 1));
         }
+    }
+    adjacents
+}
+
+fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> {
+    let mut adjacents = vec![];
+    if x > 0 {
+        adjacents.push((x - 1, y));
+    }
+    if y > 0 {
+        adjacents.push((x, y - 1));
+    }
+    adjacents.push((x, y));
+    if y < h - 1 {
+        adjacents.push((x, y + 1));
+    }
+    if x < w - 1 {
+        adjacents.push((x + 1, y));
     }
     adjacents
 }
