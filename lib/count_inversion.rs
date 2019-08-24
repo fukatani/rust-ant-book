@@ -1,15 +1,25 @@
 fn main() {
     let v = vec![1, 4, 3, 2];
-    println!("{}", count_inversion(&v));
+    assert_eq!(3, count_inversion(&v));
 
     let v = vec![1, 2, 3, 4];
-    println!("{}", count_inversion(&v));
+    assert_eq!(0, count_inversion(&v));
 
     let v = vec![4, 3, 2, 1];
-    println!("{}", count_inversion(&v));
+    assert_eq!(6, count_inversion(&v));
+}
+
+fn argsort<T: std::cmp::Ord + std::marker::Copy>(v: &Vec<T>) -> Vec<usize> {
+    let mut sort_v = Vec::new();
+    for i in 0..v.len() {
+        sort_v.push((v[i], i));
+    }
+    sort_v.sort();
+    sort_v.iter().map(|x| x.1).collect::<Vec<usize>>()
 }
 
 fn count_inversion(v: &Vec<usize>) -> i64 {
+    let v = argsort(&v).iter().map(|x| x + 1).collect::<Vec<_>>();
     let mut ans = 0;
     let mut bt = BinaryIndexTree::new(v.len());
     for i in 0..v.len() {
@@ -50,4 +60,3 @@ impl BinaryIndexTree {
         }
     }
 }
-
