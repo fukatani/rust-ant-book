@@ -61,10 +61,26 @@ fn construct_lcp(s: &str, sa: &[usize]) -> Vec<usize> {
     lcp
 }
 
+fn common_substring_length(s: &str, t: &str) -> usize {
+    let s1 = s.len();
+    let s = s.to_owned() + "#" + t;
+    let sa = construct_sa(&s);
+    let lcp = construct_lcp(&s, &sa);
+
+    let mut ans = 0;
+    for i in 0..s.len() {
+        if (sa[i] < s1) != (sa[i + 1] < s1) {
+            ans = std::cmp::max(ans, lcp[i]);
+        }
+    }
+    ans
+}
+
 fn main() {
     let s = "abracadabra";
     let a = construct_sa(s);
     assert_eq!(a, vec![11, 10, 7, 0, 3, 5, 8, 1, 4, 6, 9, 2]);
     let lcp = construct_lcp(s, &a);
     assert_eq!(lcp, [0, 1, 4, 1, 1, 0, 3, 0, 0, 0, 2, 0]);
+    assert_eq!(common_substring_length("ABRACADABRA", "ECADADABRBCRDAR"), 5);
 }
