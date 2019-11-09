@@ -1,5 +1,7 @@
 use std::cmp::*;
 
+const INF: i64 = 1001001001001001;
+
 #[derive(Debug)]
 struct LazySegmentTree {
     n: usize,
@@ -15,19 +17,19 @@ impl LazySegmentTree {
         }
         LazySegmentTree {
             n: n,
-            node: vec![std::i64::MAX; n * 2],
-            lazy: vec![std::i64::MAX; n * 2],
+            node: vec![INF; n * 2],
+            lazy: vec![INF; n * 2],
         }
     }
 
     fn eval(&mut self, k: usize, l: usize, r: usize) {
-        if self.lazy[k] != std::i64::MAX {
+        if self.lazy[k] != INF {
             self.node[k] = min(self.node[k], self.lazy[k]);
             if r - l > 1 {
                 self.lazy[2 * k + 1] = min(self.lazy[2 * k + 1], self.lazy[k]);
                 self.lazy[2 * k + 2] = min(self.lazy[2 * k + 2], self.lazy[k]);
             }
-            self.lazy[k] = std::i64::MAX;
+            self.lazy[k] = INF;
         }
     }
 
@@ -52,7 +54,7 @@ impl LazySegmentTree {
 
     fn getmin(&mut self, a: usize, b: usize, k: usize, l: usize, r: usize) -> i64 {
         if b <= l || r <= a {
-            return std::i64::MAX;
+            return INF;
         }
 
         self.eval(k, l, r);
@@ -60,8 +62,10 @@ impl LazySegmentTree {
             return self.node[k];
         }
 
-        min(self.getmin(a, b, 2 * k + 1, l, (l + r) / 2),
-            self.getmin(a, b, 2 * k + 2, (l + r) / 2, r))
+        min(
+            self.getmin(a, b, 2 * k + 1, l, (l + r) / 2),
+            self.getmin(a, b, 2 * k + 2, (l + r) / 2, r),
+        )
     }
 }
 
