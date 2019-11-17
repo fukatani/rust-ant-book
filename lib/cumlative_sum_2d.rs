@@ -29,7 +29,7 @@ impl CumulativeSum2D {
 
     // sum of [sx, gx), [sy, gy)
     fn query(&self, sx: usize, sy: usize, gx: usize, gy: usize) -> i64 {
-        self.data[gy][gx] - self.data[gy][sx] - self.data[sy][gx] + self.data[sy][sx]
+        self.data[gy][gx] + self.data[sy][sx] - self.data[gy][sx] - self.data[sy][gx]
     }
 }
 
