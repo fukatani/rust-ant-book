@@ -1,3 +1,4 @@
+#[derive(Debug)]
 struct SegTree {
     n: usize,
     dat: Vec<u32>
