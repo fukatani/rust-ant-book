@@ -1,15 +1,15 @@
-fn get_primes(n: usize) -> Vec<usize> {
-    let mut is_prime = vec![true; n + 1];
+fn get_primes(n: i64) -> Vec<i64> {
+    let mut is_prime = vec![true; n as usize + 1];
     let mut primes = Vec::new();
     is_prime[0] = false;
     is_prime[1] = false;
 
     for i in 2..n + 1 {
-        if is_prime[i] {
+        if is_prime[i as usize] {
             primes.push(i);
             let mut j = 2 * i;
             while j < n {
-                is_prime[j] = false;
+                is_prime[j as usize] = false;
                 j += i;
             }
         }
@@ -17,12 +17,12 @@ fn get_primes(n: usize) -> Vec<usize> {
     primes
 }
 
-fn factorize(mut num: usize, primes: &Vec<usize>) -> std::collections::HashMap<usize, usize>  {
+fn factorize(mut num: i64, primes: &Vec<i64>) -> std::collections::HashMap<i64, i64> {
     // max_primes >= (num)^(1/2)
     let mut dict = std::collections::HashMap::new();
     for &p in primes.iter() {
         while num % p == 0 {
-            *dict.entry(p).or_insert(0) += 1usize;
+            *dict.entry(p).or_insert(0) += 1;
             num /= p;
         }
         if num == 1 {
@@ -35,7 +35,7 @@ fn factorize(mut num: usize, primes: &Vec<usize>) -> std::collections::HashMap<u
     dict
 }
 
-fn pow(n: usize, mut p: usize) -> usize {
+fn pow(n: i64, mut p: i64) -> i64 {
     let mut r = n;
     let mut ret = 1;
     while p > 0 {
@@ -50,7 +50,7 @@ fn pow(n: usize, mut p: usize) -> usize {
     ret
 }
 
-fn collect_all_factors(dict: &std::collections::HashMap<usize, usize>) -> Vec<usize> {
+fn collect_all_factors(dict: &std::collections::HashMap<i64, i64>) -> Vec<i64> {
     let mut ret = vec![1];
     for &key in dict.keys() {
         let mut new = ret.clone();
