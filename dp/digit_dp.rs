@@ -19,7 +19,7 @@ fn main() {
                     let lim = if j == 1 { 9 } else { c.to_digit(10).unwrap() };
                     for l in 0..lim + 1 {
                         let idx1 = if j == 1 || l < lim { 1 } else { 0 };
-                        let idx2 = if j == 1 || l == 3 { 1 } else { 0 };
+                        let idx2 = if k == 1 || l == 3 { 1 } else { 0 };
                         let idx3: usize = (m + l as usize) % 3;
                         dp[i + 1][idx1][idx2][idx3] += dp[i][j][k][m];
                         dp[i + 1][idx1][idx2][idx3] %= big_int;
