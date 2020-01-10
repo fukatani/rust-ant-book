@@ -1,6 +1,6 @@
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd)]
 struct Modulo(i64);
-static mut MODULUS: i64 = 0;
+static mut MODULUS: i64 = 1000_000_000 + 7;
 impl Modulo {
     fn set_modulus(m: i64) {
         unsafe {
