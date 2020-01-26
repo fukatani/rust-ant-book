@@ -45,7 +45,7 @@ fn main() {
         println!("1");
         return;
     }
-    let mut edges: Vec<Vec<usize>> = vec![Vec::new(); 2 * (n - 1)];
+    let mut edges: Vec<Vec<usize>> = vec![Vec::new(); n];
     for _ in 0..n - 1 {
         let v = read_vec::<usize>();
         let (a, b) = (v[0] - 1, v[1] - 1);
