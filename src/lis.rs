@@ -11,7 +11,7 @@ fn main() {
     println!("{:?}", dp.lower_bound(&std::usize::MAX));
 }
 pub trait BinarySearch<T> {
-    fn lower_bound(&self, &T) -> usize;
+    fn lower_bound(&self, x: &T) -> usize;
 }
 
 impl<T: Ord> BinarySearch<T> for [T] {
