@@ -141,6 +141,12 @@ impl_modulo_ops!(Add, add, AddAssign, add_assign);
 impl_modulo_ops!(Mul, mul, MulAssign, mul_assign);
 impl_modulo_ops!(Sub, sub, SubAssign, sub_assign);
 
+pub fn mod_comb(n: usize, k: usize, fact: &[Modulo]) -> Modulo {
+    assert!(n >= k);
+    fact[n] * fact[n -k].inv() * fact[k].inv()
+}
+
+
 fn main() {
     assert_eq!(Modulo::new(2).pow(10), Modulo::new(1024));
     assert_eq!(Modulo::new(2).pow(100), Modulo::new(1340));
