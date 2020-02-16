@@ -1,6 +1,7 @@
 const INF:i64 = 1000000;
 
-fn warshall_floyd(n: usize, mut edges: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
+fn warshall_floyd(mut edges: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
+    let n = edges.len();
     for k in 0..n {
         for i in 0..n {
             for j in 0..n {
@@ -11,7 +12,8 @@ fn warshall_floyd(n: usize, mut edges: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
     edges
 }
 
-fn warshall_floyd_recover(n: usize, mut edges: Vec<Vec<i64>>) {
+fn warshall_floyd_recover(mut edges: Vec<Vec<i64>>) {
+    let n = edges.len();
     let mut prev = vec![vec![0; n]; n];
     for i in 0..n {
         for j in 0..n {
@@ -55,5 +57,5 @@ fn main() {
     edges[2][5] = 4;
     edges[4][5] = 4;
     println!("{:?}", edges);
-    println!("{:?}", warshall_floyd(v, edges));
+    println!("{:?}", warshall_floyd(edges));
 }
