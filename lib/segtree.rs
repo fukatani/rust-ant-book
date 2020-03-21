@@ -1,3 +1,4 @@
+#[derive(Clone)]
 struct SegTree<T, F>
 where
     F: Fn(T, T) -> T,
