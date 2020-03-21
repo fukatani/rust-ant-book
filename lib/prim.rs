@@ -1,4 +1,4 @@
-const INF:i32 = std::i32::MAX;
+const INF:i64 = std::i64::MAX;
 
 fn argmin<T>(u: &[T]) -> (usize)
     where T: Copy + PartialOrd
@@ -17,7 +17,7 @@ fn argmin<T>(u: &[T]) -> (usize)
 }
 
 
-fn prim(edges: &Vec<Vec<i32>>) -> i32 {
+fn prim(edges: &Vec<Vec<i64>>) -> i64 {
     let mut min_cost = vec![INF; edges.len()];
     let mut used = vec![false; edges.len()];
     let mut res = 0;
@@ -29,7 +29,7 @@ fn prim(edges: &Vec<Vec<i32>>) -> i32 {
         if not_used_indexes.is_empty() {
             break;
         }
-        let not_used_costs:Vec<i32> = (not_used_indexes.clone()).into_iter()
+        let not_used_costs:Vec<i64> = (not_used_indexes.clone()).into_iter()
                                                                 .map(|i| {min_cost[i]})
                                                                 .collect();
         let min_index = not_used_indexes[argmin(&not_used_costs)];
@@ -45,7 +45,7 @@ fn prim(edges: &Vec<Vec<i32>>) -> i32 {
 
 fn main() {
     let v = 6;
-    let mut edges: Vec<Vec<i32>> = vec![vec![INF; v]; v];
+    let mut edges: Vec<Vec<i64>> = vec![vec![INF; v]; v];
     for i in 0..v {
         edges[i][i] = 0;
     }
