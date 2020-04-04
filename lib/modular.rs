@@ -151,7 +151,7 @@ impl Sum for Modulo {
     }
 }
 
-impl<'a> Sum<&'a Self> for Modulo {
+impl<'a> Sum<&'a Modulo> for Modulo {
     fn sum<I>(iter: I) -> Self
     where
         I: Iterator<Item = &'a Self>,
