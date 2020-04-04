@@ -141,9 +141,28 @@ impl_modulo_ops!(Add, add, AddAssign, add_assign);
 impl_modulo_ops!(Mul, mul, MulAssign, mul_assign);
 impl_modulo_ops!(Sub, sub, SubAssign, sub_assign);
 
-pub fn mod_comb(n: usize, k: usize, fact: &[Modulo]) -> Modulo {
+use std::iter::Sum;
+impl Sum for Modulo {
+    fn sum<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = Modulo>,
+    {
+        iter.fold(Modulo(0), |a, b| a + b)
+    }
+}
+
+impl<'a> Sum<&'a Self> for Modulo {
+    fn sum<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = &'a Self>,
+    {
+        iter.fold(Modulo(0), |a, b| a + b)
+    }
+}
+
+fn mod_comb(n: usize, k: usize, fact: &[Modulo], fact_inv: &[Modulo]) -> Modulo {
     assert!(n >= k);
-    fact[n] * fact[n -k].inv() * fact[k].inv()
+    fact[n] * fact[n -k].inv() * fact_inv[k]
 }
 
 
