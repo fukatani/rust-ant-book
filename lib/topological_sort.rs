@@ -1,17 +1,7 @@
-fn main() {
-    let e = 5usize;
-    let v = 6usize;
-    let mut edges = Vec::new();
-    edges.push((3, 0));
-    edges.push((3, 2));
-    edges.push((0, 1));
-    edges.push((2, 4));
-    edges.push((5, 0));
-    edges.push((2, 1));
-
+fn topological_sort(edges: &Vec<(usize, usize)>, v: usize) -> Option<Vec<usize>> {
     let mut h = vec![0; v];
     let mut g = vec![Vec::new(); v];
-    for (s, t) in edges {
+    for &(s, t) in edges {
         g[s].push(t);
         h[t] += 1;
     }
@@ -34,5 +24,23 @@ fn main() {
             }
         }
     }
+    if sorted_indexes.len() == v {
+        Some(sorted_indexes)
+    } else {
+        None
+    }
+}
+
+fn main() {
+    let mut edges = Vec::new();
+    edges.push((3, 0));
+    edges.push((3, 2));
+    edges.push((0, 1));
+    edges.push((2, 4));
+    edges.push((5, 0));
+    edges.push((2, 1));
+    edges.push((1, 3));
+    let v = 6;
+    let sorted_indexes = topological_sort(&edges, v);
     println!("sorted_indexes {:?}", sorted_indexes);
 }
