@@ -28,6 +28,10 @@ fn factorize(mut num: i64, primes: &Vec<i64>) -> std::collections::HashMap<i64, 
         if num == 1 {
             break;
         }
+        if p * p > num {
+            *dict.entry(num).or_insert(0) += 1;
+            break;
+        }
     }
     if num != 1 {
         dict.insert(num, 1);
