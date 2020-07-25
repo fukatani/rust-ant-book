@@ -2,6 +2,8 @@ fn binary_search<F>(lb: usize, ub: usize, criterion: F) -> (usize, usize)
 where
     F: Fn(usize) -> bool,
 {
+    assert_eq!(criterion(lb), true);
+    assert_eq!(criterion(ub), false);
     let mut ok = lb;
     let mut ng = ub;
     while ng - ok > 1 {

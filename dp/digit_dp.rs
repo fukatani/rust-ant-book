@@ -8,7 +8,7 @@ fn read<T: std::str::FromStr>() -> T {
 
 fn main() {
     let n: String = read();
-    let mut dp = vec![vec![vec![vec![0; 3]; 2]; 2]; n.len() + 1];
+    let mut dp = vec![vec![vec![vec![0i64; 3]; 2]; 2]; n.len() + 1];
     let big_int = 1000_000_000 + 7;
     dp[0][0][0][0] = 1;  // pos, less, has3, mod3
 
