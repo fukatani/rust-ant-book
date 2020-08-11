@@ -162,7 +162,7 @@ impl<'a> Sum<&'a Modulo> for Modulo {
 
 fn mod_comb(n: usize, k: usize, fact: &[Modulo], fact_inv: &[Modulo]) -> Modulo {
     assert!(n >= k);
-    fact[n] * fact[n -k].inv() * fact_inv[k]
+    fact[n] * fact_inv[n -k] * fact_inv[k]
 }
 
 
