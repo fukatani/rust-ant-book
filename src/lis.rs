@@ -3,12 +3,12 @@ use std::cmp::*;
 fn main() {
     let n = 5;
     let a = vec![4, 2, 3, 1 ,5];
-    let mut dp = vec![std::usize::MAX; n];
+    let mut dp = vec![std::i64::MAX; n];
     for i in 0..n {
-        let mut pointer = dp.lower_bound(&a[i]);
+        let pointer = dp.lower_bound(&a[i]);
         dp[pointer] = a[i];
     }
-    println!("{:?}", dp.lower_bound(&std::usize::MAX));
+    println!("{:?}", dp.lower_bound(&std::i64::MAX));
 }
 pub trait BinarySearch<T> {
     fn lower_bound(&self, x: &T) -> usize;
