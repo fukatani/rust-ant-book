@@ -25,34 +25,6 @@ fn add_edge(from: usize, to: usize, g: &mut Graph, rg: &mut Graph) {
     rg[to].push(from);
 }
 
-fn main() {
-    let n = 12;
-    let mut g = vec![vec![]; n];
-    let mut rg = vec![vec![]; n];
-
-    add_edge(11, 10, &mut g, &mut rg);
-    add_edge(10, 7, &mut g, &mut rg);
-    add_edge(10, 9, &mut g, &mut rg);
-    add_edge(9, 8, &mut g, &mut rg);
-    add_edge(8, 7, &mut g, &mut rg);
-
-    add_edge(7, 9, &mut g, &mut rg);
-    add_edge(8, 6, &mut g, &mut rg);
-    add_edge(6, 5, &mut g, &mut rg);
-    add_edge(5, 4, &mut g, &mut rg);
-    add_edge(4, 6, &mut g, &mut rg);
-
-    add_edge(5, 2, &mut g, &mut rg);
-    add_edge(5, 3, &mut g, &mut rg);
-    add_edge(3, 2, &mut g, &mut rg);
-    add_edge(3, 0, &mut g, &mut rg);
-    add_edge(1, 2, &mut g, &mut rg);
-    add_edge(2, 1, &mut g, &mut rg);
-
-    let cmp = scc(&g, &rg);
-    println!("{:?}", cmp);
-}
-
 fn scc(g: &Graph, rg: &Graph) -> Vec<usize> {
     let mut used = vec![false; g.len()];
     let mut vs = vec![];
@@ -72,4 +44,32 @@ fn scc(g: &Graph, rg: &Graph) -> Vec<usize> {
         }
     }
     cmp
+}
+
+fn main() {
+    let n = 12;
+    let mut g = vec![vec![]; n];
+    let mut rg = vec![vec![]; n];
+
+    add_edge(11, 10, &mut g, &mut rg);
+    add_edge(10, 7, &mut g, &mut rg);
+    add_edge(10, 9, &mut g, &mut rg);
+    add_edge(9, 8, &mut g, &mut rg);
+    add_edge(8, 7, &mut g, &mut rg);
+
+    add_edge(5, 3, &mut g, &mut rg);
+    add_edge(7, 9, &mut g, &mut rg);
+    add_edge(8, 6, &mut g, &mut rg);
+    add_edge(6, 5, &mut g, &mut rg);
+    add_edge(5, 4, &mut g, &mut rg);
+    add_edge(4, 6, &mut g, &mut rg);
+
+    add_edge(5, 2, &mut g, &mut rg);
+    add_edge(3, 2, &mut g, &mut rg);
+    add_edge(3, 0, &mut g, &mut rg);
+    add_edge(1, 2, &mut g, &mut rg);
+    add_edge(2, 1, &mut g, &mut rg);
+
+    let cmp = scc(&g, &rg);
+    println!("{:?}", cmp);
 }
