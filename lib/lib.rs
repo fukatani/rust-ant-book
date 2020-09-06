@@ -246,3 +246,14 @@ impl<T: PartialOrd> Ord for Total<T> {
         self.0.partial_cmp(&other.0).unwrap()
     }
 }
+
+fn loop_for_subset(s: i64) {
+    let mut t = s;
+    loop {
+        println!("{}", t);
+        if t == 0 {
+            break;
+        }
+        t = (t - 1) & s;
+    }
+}
