@@ -9,7 +9,7 @@ impl BinaryIndexTree {
     }
 
     fn sum(&self, i: usize) -> i64 {
-        assert!(i > 0);
+        // assert!(i > 0);
         let mut i = i;
         let mut s = 0i64;
         while  i > 0 {
