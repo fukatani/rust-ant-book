@@ -202,7 +202,6 @@ fn get_adjacents_and_diagonal(x: usize, y: usize, w: usize, h: usize) -> Vec<(us
     if y > 0 {
         adjacents.push((x, y - 1));
     }
-    adjacents.push((x, y));
     if y < h - 1 {
         adjacents.push((x, y + 1));
     }
