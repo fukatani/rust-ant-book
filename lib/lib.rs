@@ -226,7 +226,6 @@ fn get_adjacents(x: usize, y: usize, w: usize, h: usize) -> Vec<(usize, usize)> 
     if y > 0 {
         adjacents.push((x, y - 1));
     }
-    adjacents.push((x, y));
     if y < h - 1 {
         adjacents.push((x, y + 1));
     }
