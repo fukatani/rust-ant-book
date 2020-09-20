@@ -255,3 +255,62 @@ fn loop_for_subset(s: i64) {
         t = (t - 1) & s;
     }
 }
+
+pub fn inv_gcd(a: i64, b: i64) -> (i64, i64) {
+    let a = a.rem_euclid(b);
+    if a == 0 {
+        return (b, 0);
+    }
+    let mut s = b;
+    let mut t = a;
+    let mut m0 = 0;
+    let mut m1 = 1;
+
+    while t != 0 {
+        let u = s / t;
+        s -= t * u;
+        m0 -= m1 * u;
+        std::mem::swap(&mut s, &mut t);
+        std::mem::swap(&mut m0, &mut m1);
+    }
+    if m0 < 0 {
+        m0 += b / s;
+    }
+    (s, m0)
+}
+
+// return y (mod z)
+pub fn crt(r: &[i64], m: &[i64]) -> Option<(i64, i64)> {
+    assert_eq!(r.len(), m.len());
+    // Contracts: 0 <= r0 < m0
+    let (mut r0, mut m0) = (0, 1);
+    for (&(mut ri), &(mut mi)) in r.iter().zip(m.iter()) {
+        assert!(1 < mi);
+        ri = ri.rem_euclid(mi);
+        if m0 < mi {
+            std::mem::swap(&mut r0, &mut ri);
+            std::mem::swap(&mut m0, &mut mi);
+        }
+        if m0 % mi == 0 {
+            if r0 % mi != ri {
+                return None;
+            }
+            continue;
+        }
+        let (g, im) = inv_gcd(m0, mi);
+        let u1 = mi / g;
+        // |ri - r0| < (m0 + mi) <= lcm(m0, mi)
+        if (ri - r0) % g != 0 {
+            return None;
+        }
+        let x = (ri - r0) / g % u1 * im % u1;
+
+        r0 += x * m0;
+        m0 *= u1; // -> lcm(m0, mi)
+        if r0 < 0 {
+            r0 += m0
+        };
+    }
+
+    Some((r0, m0))
+}
