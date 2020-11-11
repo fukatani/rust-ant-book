@@ -314,3 +314,19 @@ pub fn crt(r: &[i64], m: &[i64]) -> Option<(i64, i64)> {
 
     Some((r0, m0))
 }
+
+fn rotate<T: Clone>(a: &[Vec<T>]) -> Vec<Vec<T>> {
+    if a.is_empty() {
+        return vec![];
+    }
+    let h = a.len();
+    let w = a[0].len();
+    assert!(a.iter().all(|a| a.len() == w));
+    let mut b = (0..w).map(|_| Vec::with_capacity(h)).collect::<Vec<_>>();
+    for a in a.iter().rev() {
+        for (b, a) in b.iter_mut().zip(a.iter()) {
+            b.push(a.clone());
+        }
+    }
+    b
+}
