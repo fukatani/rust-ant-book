@@ -330,3 +330,10 @@ fn rotate<T: Clone>(a: &[Vec<T>]) -> Vec<Vec<T>> {
     }
     b
 }
+
+fn diagonal_reverse<T>(grid: &mut Vec<Vec<T>>) {
+    grid.reverse();
+    for line in grid.iter_mut() {
+        line.reverse();
+    }
+}

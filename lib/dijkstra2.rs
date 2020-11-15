@@ -1,10 +1,12 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-const INF: i64 = 100000_00000_00000;
+type Cost = i64;
+
+const INF: Cost = 100000_00000_00000;
 
 #[derive(PartialEq, Debug)]
 struct MinInt {
-    value: i64,
+    value: Cost,
 }
 
 impl Eq for MinInt {}
@@ -17,21 +19,21 @@ impl PartialOrd for MinInt {
 
 impl Ord for MinInt {
     fn cmp(&self, other: &MinInt) -> Ordering {
-        other.value.cmp(&self.value)
+        other.value.partial_cmp(&self.value).unwrap()
     }
 }
 
-fn make_pair(x: i64, y: usize) -> (MinInt, usize) {
+fn make_pair(x: Cost, y: usize) -> (MinInt, usize) {
     (MinInt { value: x }, y)
 }
 
 #[derive(Debug, Clone)]
 struct Edge {
     to: usize,
-    cost: i64,
+    cost: Cost,
 }
 
-fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize) -> Vec<i64> {
+fn solve(edges: &Vec<Vec<Edge>>, start_idx: usize) -> Vec<Cost> {
     let num_apexes = edges.len();
     let mut d = vec![INF; num_apexes];
     d[start_idx] = 0;
