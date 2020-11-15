@@ -1,6 +1,7 @@
-fn binary_search<F>(lb: usize, ub: usize, criterion: F) -> (usize, usize)
+type Input = usize;
+fn binary_search<F>(lb: Input, ub: Input, criterion: F) -> (Input, Input)
 where
-    F: Fn(usize) -> bool,
+    F: Fn(Input) -> bool,
 {
     assert_eq!(criterion(lb), true);
     assert_eq!(criterion(ub), false);
@@ -16,6 +17,7 @@ where
     }
     (ok, ng)
 }
+
 
 fn ternary_search<F>(lb: usize, ub: usize, criterion: F) -> usize
 where
