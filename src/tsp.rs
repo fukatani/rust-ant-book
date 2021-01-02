@@ -1,4 +1,4 @@
-const INF: u64 = 1000;
+const INF: u64 = 10000000000;
 
 fn main() {
     let n = 5;
