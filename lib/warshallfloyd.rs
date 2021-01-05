@@ -1,4 +1,4 @@
-const INF:i64 = 1000000;
+const INF:i64 = 100000000000;
 
 fn warshall_floyd(mut edges: Vec<Vec<i64>>) -> Vec<Vec<i64>> {
     let n = edges.len();
