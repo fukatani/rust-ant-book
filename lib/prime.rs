@@ -8,7 +8,7 @@ fn get_primes(n: i64) -> Vec<i64> {
         if is_prime[i as usize] {
             primes.push(i);
             let mut j = 2 * i;
-            while j < n {
+            while j <= n {
                 is_prime[j as usize] = false;
                 j += i;
             }
@@ -19,6 +19,7 @@ fn get_primes(n: i64) -> Vec<i64> {
 
 fn factorize(mut num: i64, primes: &Vec<i64>) -> std::collections::HashMap<i64, i64> {
     // max_primes >= (num)^(1/2)
+    let num_org = num;
     let mut dict = std::collections::HashMap::new();
     for &p in primes.iter() {
         while num % p == 0 {
@@ -28,7 +29,7 @@ fn factorize(mut num: i64, primes: &Vec<i64>) -> std::collections::HashMap<i64, 
         if num == 1 {
             break;
         }
-        if p * p > num {
+        if p * p > num_org {
             *dict.entry(num).or_insert(0) += 1;
             break;
         }
