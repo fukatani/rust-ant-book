@@ -1,10 +1,11 @@
+
 use std::cmp::Ordering;
 
 #[derive(Debug, Clone)]
 struct Edge {
     from: usize,
     to: usize,
-    cost: i32
+    cost: i64,
 }
 
 impl PartialEq for Edge {
@@ -16,7 +17,7 @@ impl PartialEq for Edge {
 impl Eq for Edge {}
 
 impl Ord for Edge {
-    fn cmp(&self, other:&Self) -> Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.cost.cmp(&other.cost)
     }
 }
@@ -27,25 +28,39 @@ impl PartialOrd for Edge {
     }
 }
 
+#[derive(Debug, Clone)]
 struct UnionFindTree {
-    parent_or_size: Vec<isize>,
+    parent: Vec<isize>,
+    size: Vec<usize>,
+    height: Vec<u64>,
 }
 
 impl UnionFindTree {
-    fn new(size: usize) -> UnionFindTree {
-        UnionFindTree { parent_or_size: vec![-1; size] }
-    }
-
-    fn find(&self, index: usize) -> usize {
-        let mut index = index;
-        while self.parent_or_size[index] >= 0 {
-            index = self.parent_or_size[index] as usize;
+    fn new(n: usize) -> UnionFindTree {
+        UnionFindTree {
+            parent: vec![-1; n],
+            size: vec![1usize; n],
+            height: vec![0u64; n],
         }
-        index
     }
 
-    fn same(&self, x: usize, y: usize) -> bool {
+    fn find(&mut self, index: usize) -> usize {
+        if self.parent[index] == -1 {
+            return index;
+        }
+        let idx = self.parent[index] as usize;
+        let ret = self.find(idx);
+        self.parent[index] = ret as isize;
+        ret
+    }
+
+    fn same(&mut self, x: usize, y: usize) -> bool {
         self.find(x) == self.find(y)
+    }
+
+    fn get_size(&mut self, x: usize) -> usize {
+        let idx = self.find(x);
+        self.size[idx]
     }
 
     fn unite(&mut self, index0: usize, index1: usize) -> bool {
@@ -54,20 +69,23 @@ impl UnionFindTree {
         if a == b {
             false
         } else {
-            if self.parent_or_size[a] < self.parent_or_size[b] {
-                self.parent_or_size[a] += self.parent_or_size[b];
-                self.parent_or_size[b] = a as isize;
+            if self.height[a] > self.height[b] {
+                self.parent[b] = a as isize;
+                self.size[a] += self.size[b];
+            } else if self.height[a] < self.height[b] {
+                self.parent[a] = b as isize;
+                self.size[b] += self.size[a];
             } else {
-                self.parent_or_size[b] += self.parent_or_size[a];
-                self.parent_or_size[a] = b as isize;
+                self.parent[b] = a as isize;
+                self.size[a] += self.size[b];
+                self.height[a] += 1;
             }
             true
         }
     }
 }
 
-
-fn kruskal(edges: &Vec<Edge>, num_apexes: usize) -> i32 {
+fn kruskal(edges: &Vec<Edge>, num_apexes: usize) -> i64 {
     let mut edges = edges.clone();
     let mut res = 0;
     edges.sort();
@@ -78,7 +96,11 @@ fn kruskal(edges: &Vec<Edge>, num_apexes: usize) -> i32 {
             res += e.cost;
         }
     }
-    res
+    if unf.get_size(0) != num_apexes {
+        -1
+    } else {
+        res
+    }
 }
 
 fn main() {
