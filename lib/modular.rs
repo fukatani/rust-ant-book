@@ -160,6 +160,25 @@ impl<'a> Sum<&'a Modulo> for Modulo {
     }
 }
 
+use std::iter::Product;
+impl Product for Modulo {
+    fn product<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = Modulo>,
+    {
+        iter.fold(Modulo(1), |a, b| a * b)
+    }
+}
+
+impl<'a> Product<&'a Modulo> for Modulo {
+    fn product<I>(iter: I) -> Self
+    where
+        I: Iterator<Item = &'a Self>,
+    {
+        iter.fold(Modulo(1), |a, b| a * b)
+    }
+}
+
 fn mod_comb(n: usize, k: usize, fact: &[Modulo], fact_inv: &[Modulo]) -> Modulo {
     assert!(n >= k);
     fact[n] * fact_inv[n -k] * fact_inv[k]
