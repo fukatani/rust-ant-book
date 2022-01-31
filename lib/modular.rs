@@ -191,3 +191,14 @@ fn main() {
     assert_eq!(Modulo::new(10000) + 10, Modulo::new(3));
     assert_eq!(Modulo::new(10000) * 2, Modulo::new(9993));
 }
+
+fn mod_comb2(n: i64, k: i64, invs: &Vec<Modulo>) -> Modulo {
+    assert!(n >= k);
+
+    let mut ret = Modulo(1);
+    for i in 0..k {
+        ret *= n - i;
+        ret *= invs[i as usize + 1];
+    }
+    ret
+}
