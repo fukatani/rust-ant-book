@@ -185,16 +185,9 @@ fn mod_comb(n: usize, k: usize, fact: &[Modulo], fact_inv: &[Modulo]) -> Modulo 
     fact[n] * fact_inv[n -k] * fact_inv[k]
 }
 
-
-fn main() {
-    assert_eq!(Modulo::new(2).pow(10), Modulo::new(1024));
-    assert_eq!(Modulo::new(2).pow(100), Modulo::new(1340));
-    assert_eq!(Modulo::new(10000) + 10, Modulo::new(3));
-    assert_eq!(Modulo::new(10000) * 2, Modulo::new(9993));
-}
-
 fn mod_comb2(n: i64, k: i64, invs: &Vec<Modulo>) -> Modulo {
     assert!(n >= k);
+    assert!(invs.len() < 3 || invs[2].inv().0 == 2); // caution: not fact_inv
 
     let mut ret = Modulo(1);
     for i in 0..k {
@@ -202,4 +195,11 @@ fn mod_comb2(n: i64, k: i64, invs: &Vec<Modulo>) -> Modulo {
         ret *= invs[i as usize + 1];
     }
     ret
+}
+
+fn main() {
+    assert_eq!(Modulo::new(2).pow(10), Modulo::new(1024));
+    assert_eq!(Modulo::new(2).pow(100), Modulo::new(1340));
+    assert_eq!(Modulo::new(10000) + 10, Modulo::new(3));
+    assert_eq!(Modulo::new(10000) * 2, Modulo::new(9993));
 }
