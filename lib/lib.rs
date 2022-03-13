@@ -337,3 +337,13 @@ fn diagonal_reverse<T>(grid: &mut Vec<Vec<T>>) {
         line.reverse();
     }
 }
+
+fn calc_sq(x: i64) -> i64 {
+    let sq = (x as f64).sqrt() as i64;
+    for ret in sq - 2.. {
+        if (ret + 1) * (ret + 1) > x {
+            return ret;
+        }
+    }
+    unreachable!();
+}
