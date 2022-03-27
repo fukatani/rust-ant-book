@@ -1,33 +1,4 @@
-
-use std::cmp::Ordering;
-
-#[derive(Debug, Clone)]
-struct Edge {
-    from: usize,
-    to: usize,
-    cost: i64,
-}
-
-impl PartialEq for Edge {
-    fn eq(&self, other: &Edge) -> bool {
-        self.cost == other.cost
-    }
-}
-
-impl Eq for Edge {}
-
-impl Ord for Edge {
-    fn cmp(&self, other: &Self) -> Ordering {
-        self.cost.cmp(&other.cost)
-    }
-}
-
-impl PartialOrd for Edge {
-    fn partial_cmp(&self, other: &Edge) -> Option<Ordering> {
-        Some(self.cost.cmp(&other.cost))
-    }
-}
-
+// https://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=GRL_2_A
 #[derive(Debug, Clone)]
 struct UnionFindTree {
     parent: Vec<isize>,
@@ -85,15 +56,15 @@ impl UnionFindTree {
     }
 }
 
-fn kruskal(edges: &Vec<Edge>, num_apexes: usize) -> i64 {
+fn kruskal(edges: &Vec<(i64, usize, usize)>, num_apexes: usize) -> i64 {
     let mut edges = edges.clone();
     let mut res = 0;
     edges.sort();
     let mut unf = UnionFindTree::new(num_apexes);
-    for e in edges {
-        if !unf.same(e.to, e.from) {
-            unf.unite(e.to, e.from);
-            res += e.cost;
+    for &(cost, to, from) in &edges {
+        if !unf.same(to, from) {
+            unf.unite(to, from);
+            res += cost;
         }
     }
     if unf.get_size(0) != num_apexes {
@@ -103,14 +74,32 @@ fn kruskal(edges: &Vec<Edge>, num_apexes: usize) -> i64 {
     }
 }
 
+use std::cmp::*;
+use std::collections::*;
+
 fn main() {
-    let mut edges:Vec<Edge> = Vec::new();
-    edges.push(Edge{from: 0, to: 1, cost: 5});
-    edges.push(Edge{from: 0, to: 2, cost: 4});
-    edges.push(Edge{from: 1, to: 2, cost: 2});
-    edges.push(Edge{from: 2, to: 3, cost: 2});
-    edges.push(Edge{from: 2, to: 4, cost: 1});
-    edges.push(Edge{from: 2, to: 5, cost: 4});
-    edges.push(Edge{from: 4, to: 5, cost: 4});
-    println!("{:?}", kruskal(&edges, 6));
+    let v = read_vec::<usize>();
+    let (v, e) = (v[0], v[1]);
+
+    let mut edges = vec![];
+    for i in 0..e {
+        let v = read_vec::<usize>();
+        let (a, b, c) = (v[2] as i64, v[0], v[1]);
+        edges.push((a, b, c));
+    }
+    let ans = kruskal(&edges, v);
+    println!("{}", ans);
+}
+
+fn read<T: std::str::FromStr>() -> T {
+    let mut s = String::new();
+    std::io::stdin().read_line(&mut s).ok();
+    s.trim().parse().ok().unwrap()
+}
+
+fn read_vec<T: std::str::FromStr>() -> Vec<T> {
+    read::<String>()
+        .split_whitespace()
+        .map(|e| e.parse().ok().unwrap())
+        .collect()
 }
