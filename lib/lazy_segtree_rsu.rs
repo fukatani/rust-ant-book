@@ -33,6 +33,58 @@ impl MapMonoid for AddAssign {
     }
 }
 
+type S = (i64, i64, i64);
+struct Affine;
+impl Monoid for Affine {
+    type S = S;
+    fn identity() -> S {
+        (0, 0, 0)
+    }
+    fn binary_operation(a: &S, b: &S) -> S {
+        (a.0 + b.0, a.1 + b.1, a.2 + b.2 + a.1 * b.0)
+    }
+}
+
+struct MinAdd;
+impl MapMonoid for MinAdd {
+    type M = Min<i32>;
+    type F = i32;
+
+    fn identity_map() -> Self::F {
+        0
+    }
+
+    fn mapping(&f: &i32, &x: &i32) -> i32 {
+        f + x
+    }
+
+    fn composition(&f: &i32, &g: &i32) -> i32 {
+        f + g
+    }
+}
+
+struct RangeAffineSum;
+impl MapMonoid for RangeAffineSum {
+    type M = MonoidA;
+    type F = i64;
+
+    fn identity_map() -> Self::F {
+        0
+    }
+
+    fn mapping(&f: &Self::F, &x: &S) -> S {
+        if f == 0 {
+            return x;
+        }
+        (x.1, x.0, x.1 * x.0 - x.2)
+    }
+
+    fn composition(&second: &Self::F, &first: &Self::F) -> Self::F {
+        return second ^ first;
+    }
+}
+
+
 //https://github.com/rust-lang-ja/ac-library-rs
 
 pub mod internal_bit {
