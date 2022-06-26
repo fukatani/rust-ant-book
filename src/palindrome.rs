@@ -11,19 +11,20 @@ fn main() {
     let sa = construct_sa(&s);
     let (lcp, rank) = construct_lcp(&s, &sa);
     let st = SparseTable::new(&lcp);
+    let common = |i, j| st.rmq(min(rank[i], rank[j]), max(rank[i], rank[j]));
 
     // find odd length palindrome
     let mut ans = 0;
     for i in 0..n {
         let j = n * 2 - i;
-        let l = st.rmq(min(rank[i], rank[j]), max(rank[i], rank[j]));
+        let l = common(i, j);
         ans = max(ans, 2 * l - 1);
     }
 
     // find even length palindrome
     for i in 1..n {
         let j = n * 2 + 1 - i;
-        let l = st.rmq(min(rank[i], rank[j]), max(rank[i], rank[j]));
+        let l = common(i, j);
         ans = max(ans, 2 * l);
     }
     println!("{}", ans);
