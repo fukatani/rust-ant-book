@@ -61,6 +61,21 @@ impl LCA {
         }
         self.parent[0][u].unwrap()
     }
+
+    fn get_parent(&self, u: usize, mut dist: usize) -> Option<usize> {
+        let mut cur = u;
+        for di in (0..21).rev() {
+            if dist >= 1 << di {
+                dist -= 1 << di;
+                if let Some(x) = self.parent[di][cur] {
+                    cur = x;
+                } else {
+                    return None;
+                }
+            }
+        }
+        Some(cur)
+    }
 }
 
 fn main() {
