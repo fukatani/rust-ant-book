@@ -347,3 +347,23 @@ fn calc_sq(x: i64) -> i64 {
     }
     unreachable!();
 }
+
+fn gray_codes(n: i64) -> Vec<i64> {
+    (0..(1 << n)).map(|x| x ^ (x >> 1)).collect::<Vec<_>>()
+}
+
+fn calc_bases(n: i64, k: u32) -> Vec<i64> {
+    let mut bases = vec![];
+    for i in (0..n).rev() {
+        let mut cur = i;
+        for &elem in bases.iter().rev() {
+            cur = min(elem ^ cur, cur);
+        }
+        if cur == 0 {
+            continue;
+        }
+        bases.push(cur);
+        bases.sort();
+    }
+    bases
+}
