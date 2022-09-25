@@ -60,10 +60,6 @@ fn baby_step_giant_step(mut x: i64, mut y: i64, m: i64) -> i64 {
         }
     }
 
-    if mul.contains_key(&y) {
-        return mul[&y];
-    }
-
     // giant-step
     let r = mod_inverse(pow_m(x, sq, m), m); // r = x^(-sq)
     for a in 0..=sq {
