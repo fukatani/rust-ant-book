@@ -67,6 +67,12 @@ impl std::ops::SubAssign for Modulo {
         }
     }
 }
+impl std::ops::Neg for Modulo {
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        Modulo::new(-self.0)
+    }
+}
 macro_rules! impl_modulo_ops {
     ($imp:ident, $method:ident, $assign_imp:ident, $assign_method:ident) => {
         impl<'a> std::ops::$assign_imp<&'a Modulo> for Modulo {
@@ -195,6 +201,52 @@ fn mod_comb2(n: i64, k: i64, invs: &Vec<Modulo>) -> Modulo {
         ret *= invs[i as usize + 1];
     }
     ret
+}
+
+
+type mat = Vec<Vec<Modulo>>;
+
+fn mat_zeros(n: usize, m: usize) -> mat {
+    vec![vec![Modulo(0); m]; n]
+}
+
+fn matmul(a: &mat, b: &mat) -> mat {
+    let mut c = mat_zeros(a.len(), b[0].len());
+    for i in 0..a.len() {
+        for k in 0..b.len() {
+            for j in 0..b[0].len() {
+                c[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    c
+}
+
+fn matpow(a: &mat, n: u64) -> mat {
+    let mut b = mat_zeros(a.len(), a.len());
+    for i in 0..a.len() {
+        b[i][i] = Modulo(1);
+    }
+    let mut n = n;
+    let mut a: mat = a.clone();
+    while n > 0 {
+        if n & 1 == 1 {
+            b = matmul(&a, &b);
+        }
+        a = matmul(&a, &a);
+        n >>= 1;
+    }
+    b
+}
+
+fn matinv(a: &mat) -> mat {
+    assert!(a.len() == 2);
+    assert!(a[0].len() == 2);
+    let coef = (a[0][0] * a[1][1] - a[0][1] * a[1][0]).inv();
+    vec![
+        vec![a[1][1] * coef, -a[0][1] * coef],
+        vec![-a[1][0] * coef, a[0][0] * coef],
+    ]
 }
 
 fn main() {
